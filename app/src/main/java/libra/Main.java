@@ -1,5 +1,6 @@
 package libra;
 
+import io.sentry.Sentry;
 import libra.Events.Listener;
 import libra.Utils.Config;
 import net.dv8tion.jda.api.JDABuilder;
@@ -34,6 +35,11 @@ public class Main {
 
         try {
             builder.build();
+            Sentry.init(options -> {
+                options.setDsn(config.SentryDNS);
+                options.setTracesSampleRate(1.0);
+                options.setDebug(false);
+            });
         } catch (LoginException e) {
             e.printStackTrace();
         }
