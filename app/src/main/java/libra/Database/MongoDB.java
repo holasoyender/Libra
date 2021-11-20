@@ -1,4 +1,4 @@
-package libra;
+package libra.Database;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
