@@ -1,7 +1,7 @@
 package libra;
 
 import io.sentry.Sentry;
-import libra.Database.MongoDB;
+import libra.Database.Database;
 import libra.Events.Listener;
 import libra.Utils.Config;
 import net.dv8tion.jda.api.JDABuilder;
@@ -34,9 +34,9 @@ public class Main {
         builder.disableIntents(GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_PRESENCES);
         builder.setLargeThreshold(50);
 
+        //Database.createGuildDocument("711944422341738526");
         try {
             builder.build();
-            MongoDB.ConnectToMongoDB();
             Sentry.init(options -> {
                 options.setDsn(config.SentryDNS);
                 options.setTracesSampleRate(1.0);

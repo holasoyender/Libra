@@ -1,5 +1,6 @@
 package libra.Events;
 
+import libra.Database.Database;
 import libra.Utils.CommandManager;
 import libra.Utils.Config;
 import libra.Utils.Logger;
@@ -27,7 +28,7 @@ public class Listener extends ListenerAdapter {
 
         if(user.isBot() || event.isWebhookMessage()) return;
 
-        String prefix = config.Prefix;
+        String prefix = Database.getGuildPrefix(event.getGuild().getId());
         String raw = event.getMessage().getContentRaw();
 
         if(!raw.startsWith(prefix)) return;

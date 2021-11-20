@@ -2,6 +2,7 @@ package libra.Utils;
 
 import libra.Commands.Help;
 import libra.Commands.Ping;
+import libra.Database.Database;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
@@ -48,7 +49,9 @@ public class CommandManager {
     }
 
     public void run(GuildMessageReceivedEvent event) {
-        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(config.Prefix), "").split("\\s+");
+
+        String prefix = Database.getGuildPrefix(event.getGuild().getId());
+        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
         Command cmd = this.getCommand(invoke);
