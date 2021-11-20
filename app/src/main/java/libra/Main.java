@@ -35,6 +35,7 @@ public class Main {
 
         try {
             builder.build();
+            MongoDB.ConnectToMongoDB();
             Sentry.init(options -> {
                 options.setDsn(config.SentryDNS);
                 options.setTracesSampleRate(1.0);
