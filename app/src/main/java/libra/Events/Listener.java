@@ -32,6 +32,6 @@ public class Listener extends ListenerAdapter {
 
         if(!raw.startsWith(prefix)) return;
 
-        manager.handle(event);
+        manager.run(event);
     }
 }

@@ -1,5 +1,6 @@
 package libra.Utils;
 
+import libra.Commands.Help;
 import libra.Commands.Ping;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -16,6 +17,7 @@ public class CommandManager {
 
     public CommandManager(){
         addCommand(new Ping());
+        addCommand(new Help(this));
     }
 
     private void addCommand(Command cmd) {
@@ -28,8 +30,12 @@ public class CommandManager {
         commands.add(cmd);
     }
 
+    public List<Command> getCommands() {
+        return commands;
+    }
+
     @Nullable
-    private Command getCommand(String search) {
+    public Command getCommand(String search) {
         String searchLower = search.toLowerCase();
 
         for (Command command : this.commands) {
@@ -41,7 +47,7 @@ public class CommandManager {
         return null;
     }
 
-    public void handle(GuildMessageReceivedEvent event) {
+    public void run(GuildMessageReceivedEvent event) {
         String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(config.Prefix), "").split("\\s+");
 
         String invoke = split[0].toLowerCase();
@@ -50,7 +56,7 @@ public class CommandManager {
         if(cmd != null) {
             List<String> args = Arrays.asList(split).subList(1, split.length);
             CommandContext context = new CommandContext(event, args);
-            cmd.handle(context);
+            cmd.run(context);
         }
     }
 
