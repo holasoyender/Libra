@@ -2,15 +2,16 @@ package libra.Commands;
 
 import com.mongodb.DBObject;
 import libra.Utils.Command;
-import libra.Utils.CommandContext;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 public class Ping implements Command {
 
     @Override
-    public void run(CommandContext context, DBObject Guild) {
+    public void run(SlashCommandEvent context, DBObject Guild) {
         JDA jda = context.getJDA();
-        context.getChannel().sendMessageFormat("Mi ping es de `%sms`", jda.getGatewayPing()).queue();
+        context.replyFormat("Mi ping es de `%sms`", jda.getGatewayPing()).queue();
     }
 
     @Override
@@ -22,5 +23,10 @@ public class Ping implements Command {
     @Override
     public String getName() {
         return "ping";
+    }
+
+    @Override
+    public CommandData getSlashData() {
+        return new CommandData(this.getName(), this.getDescription());
     }
 }

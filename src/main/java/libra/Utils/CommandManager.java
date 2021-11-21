@@ -4,18 +4,19 @@ import com.mongodb.DBObject;
 import libra.Commands.Help;
 import libra.Commands.Ping;
 import libra.Database.Database;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class CommandManager {
 
     private final List<Command> commands = new ArrayList<>();
-    private final Config config = new Config().getConfig();
+
+    public List<Command> getCommands() {
+        return commands;
+    }
 
     public CommandManager(){
         addCommand(new Ping());
@@ -28,12 +29,8 @@ public class CommandManager {
         if(nameFound) {
             throw new IllegalArgumentException("Ya existe un comando con ese nombre!");
         }
-        
-        commands.add(cmd);
-    }
 
-    public List<Command> getCommands() {
-        return commands;
+        commands.add(cmd);
     }
 
     @Nullable
@@ -49,19 +46,16 @@ public class CommandManager {
         return null;
     }
 
-    public void run(GuildMessageReceivedEvent event) {
+    public void run(SlashCommandEvent event) {
 
-        String prefix = Database.getGuildPrefix(event.getGuild().getId());
-        String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split("\\s+");
+        if(event.getGuild() == null) return;
         DBObject Guild = Database.getGuildDocument(event.getGuild().getId());
 
-        String invoke = split[0].toLowerCase();
+        String invoke = event.getName();
         Command cmd = this.getCommand(invoke);
 
         if(cmd != null) {
-            List<String> args = Arrays.asList(split).subList(1, split.length);
-            CommandContext context = new CommandContext(event, args);
-            cmd.run(context, Guild);
+            cmd.run(event, Guild);
         }
     }
 

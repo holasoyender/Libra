@@ -1,7 +1,6 @@
 package libra;
 
 import io.sentry.Sentry;
-import libra.Database.Database;
 import libra.Events.Listener;
 import libra.Utils.Config;
 import net.dv8tion.jda.api.JDABuilder;

@@ -2,10 +2,13 @@ package libra.Commands;
 
 import com.mongodb.DBObject;
 import libra.Utils.Command;
-import libra.Utils.CommandContext;
 import libra.Utils.CommandManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.awt.*;
 import java.time.Instant;
@@ -21,39 +24,36 @@ public class Help implements Command {
     }
 
     @Override
-    public void run(CommandContext context, DBObject Guild) {
+    public void run(SlashCommandEvent context, DBObject Guild) {
 
-        List<String> args = context.getArgs();
-        TextChannel channel = context.getChannel();
-
-        if (args.isEmpty()) {
+        OptionMapping CommandOption = context.getOption("comando");
+        if(CommandOption == null) {
             EmbedBuilder embed = new EmbedBuilder()
-                    .setAuthor("Lista de comandos ", context.getSelfUser().getAvatarUrl())
-                    .setFooter("> " + context.getAuthor().getAsTag(), context.getAuthor().getAvatarUrl())
-                    .setThumbnail(context.getSelfUser().getAvatarUrl())
+                    .setAuthor("Lista de comandos ", context.getJDA().getSelfUser().getAvatarUrl())
+                    .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                    .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                     .setColor(Color.decode("#8F45E2"))
                     .setTimestamp(Instant.now());
 
             manager.getCommands().stream().map(Command::getName).forEach(
                     (cmd) -> embed.addField("`"+cmd+"`", Objects.requireNonNull(manager.getCommand(cmd)).getDescription() , true)
             );
-            channel.sendMessageEmbeds(embed.build()).queue();
+            context.replyEmbeds(embed.build()).queue();
 
             return;
         }
 
-        String search = args.get(0).toLowerCase();
-        Command command = manager.getCommand(search);
+        Command command = manager.getCommand(CommandOption.getAsString());
 
         if (command == null) {
-            channel.sendMessage("Ese comando no existe!").queue();
+            context.reply("Ese comando no existe!").setEphemeral(true).queue();
             return;
         }
 
         EmbedBuilder embed = new EmbedBuilder()
-                .setAuthor("Comando " + command.getName(), context.getSelfUser().getAvatarUrl())
-                .setFooter("> " + context.getAuthor().getAsTag(), context.getAuthor().getAvatarUrl())
-                .setThumbnail(context.getSelfUser().getAvatarUrl())
+                .setAuthor("Comando " + command.getName(), context.getJDA().getSelfUser().getAvatarUrl())
+                .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                 .setColor(Color.decode("#8F45E2"))
                 .setTimestamp(Instant.now())
                 .addField("Nombre", command.getName(), true)
@@ -61,7 +61,7 @@ public class Help implements Command {
                 .addField("Forma de uso", command.getUsage(), true)
                 .addField("Permisos", command.getPermissions(), true);
 
-        channel.sendMessageEmbeds(embed.build()).queue();
+        context.replyEmbeds(embed.build()).queue();
     }
 
     @Override
@@ -87,5 +87,11 @@ public class Help implements Command {
     @Override
     public List<String> getAliases() {
         return List.of("h", "commands", "comandos");
+    }
+
+    @Override
+    public CommandData getSlashData() {
+        return new CommandData(this.getName(), this.getDescription())
+                .addOptions(new OptionData(OptionType.STRING, "comando", "Nombre del comando a recibir ayuda"));
     }
 }
