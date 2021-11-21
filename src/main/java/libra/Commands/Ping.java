@@ -11,7 +11,6 @@ public class Ping implements Command {
     public void run(CommandContext context, DBObject Guild) {
         JDA jda = context.getJDA();
         context.getChannel().sendMessageFormat("Mi ping es de `%sms`", jda.getGatewayPing()).queue();
-        System.out.println(Guild);
     }
 
     @Override
