@@ -1,10 +1,12 @@
 package libra.Utils;
 
+import com.mongodb.DBObject;
+
 import java.util.List;
 
 public interface Command {
 
-    void run(CommandContext context);
+    void run(CommandContext context, DBObject Guild);
 
     String getName();
 

@@ -34,7 +34,6 @@ public class Main {
         builder.disableIntents(GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_PRESENCES);
         builder.setLargeThreshold(50);
 
-        //Database.createGuildDocument("711944422341738526");
         try {
             builder.build();
             Sentry.init(options -> {

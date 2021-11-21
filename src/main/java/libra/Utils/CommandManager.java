@@ -1,5 +1,6 @@
 package libra.Utils;
 
+import com.mongodb.DBObject;
 import libra.Commands.Help;
 import libra.Commands.Ping;
 import libra.Database.Database;
@@ -52,6 +53,7 @@ public class CommandManager {
 
         String prefix = Database.getGuildPrefix(event.getGuild().getId());
         String[] split = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split("\\s+");
+        DBObject Guild = Database.getGuildDocument(event.getGuild().getId());
 
         String invoke = split[0].toLowerCase();
         Command cmd = this.getCommand(invoke);
@@ -59,7 +61,7 @@ public class CommandManager {
         if(cmd != null) {
             List<String> args = Arrays.asList(split).subList(1, split.length);
             CommandContext context = new CommandContext(event, args);
-            cmd.run(context);
+            cmd.run(context, Guild);
         }
     }
 

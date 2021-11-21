@@ -1,5 +1,6 @@
 package libra.Commands;
 
+import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandContext;
 import net.dv8tion.jda.api.JDA;
@@ -7,9 +8,10 @@ import net.dv8tion.jda.api.JDA;
 public class Ping implements Command {
 
     @Override
-    public void run(CommandContext context) {
+    public void run(CommandContext context, DBObject Guild) {
         JDA jda = context.getJDA();
         context.getChannel().sendMessageFormat("Mi ping es de `%sms`", jda.getGatewayPing()).queue();
+        System.out.println(Guild);
     }
 
     @Override

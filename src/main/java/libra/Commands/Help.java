@@ -1,5 +1,6 @@
 package libra.Commands;
 
+import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandContext;
 import libra.Utils.CommandManager;
@@ -20,7 +21,7 @@ public class Help implements Command {
     }
 
     @Override
-    public void run(CommandContext context) {
+    public void run(CommandContext context, DBObject Guild) {
 
         List<String> args = context.getArgs();
         TextChannel channel = context.getChannel();
