@@ -10,7 +10,6 @@ repositories {
         url 'https://m2.dv8tion.net/releases'
     }
     mavenCentral()
-    jcenter()
     maven {
         name 'jfrog-duncte123'
         url 'https://duncte123.jfrog.io/artifactory/maven'
@@ -22,7 +21,6 @@ mainClassName = "libra.Main"
 
 dependencies {
     implementation 'net.dv8tion:JDA:4.3.0_346'
-    implementation 'com.jagrosh:jda-utilities:3.0.5'
     implementation 'me.duncte123:botCommons:2.3.9'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha10'
     implementation 'io.sentry:sentry:5.4.1'
