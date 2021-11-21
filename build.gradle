@@ -18,6 +18,7 @@ repositories {
 }
 
 version '1.0'
+mainClassName = "libra.Main"
 
 dependencies {
     implementation 'net.dv8tion:JDA:4.3.0_346'
