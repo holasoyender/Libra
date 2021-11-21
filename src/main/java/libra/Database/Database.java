@@ -8,15 +8,17 @@ import java.net.UnknownHostException;
 public class Database {
 
     private static final Config config = new Config().getConfig();
-
-    public static DBObject getGuildDocument(String guildID) {
-
-        MongoClient mongoClient = null;
+    private static MongoClient mongoClient = null;
+    static {
         try {
             mongoClient = new MongoClient(new MongoClientURI(config.MongoUrl));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static DBObject getGuildDocument(String guildID) {
 
         assert mongoClient != null;
         DB Database = mongoClient.getDB("Libra");
@@ -30,14 +32,6 @@ public class Database {
 
     public static String getGuildPrefix(String guildID) {
 
-        MongoClient mongoClient;
-        try {
-            mongoClient = new MongoClient(new MongoClientURI(config.MongoUrl));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return config.Prefix;
-        }
-
         DB Database = mongoClient.getDB("Libra");
         DBCollection Guilds = Database.getCollection("Guilds");
         DBObject query = new BasicDBObject("guildID", guildID);
@@ -48,13 +42,6 @@ public class Database {
     }
 
     public static void createGuildDocument(String guildID) {
-
-        MongoClient mongoClient = null;
-        try {
-            mongoClient = new MongoClient(new MongoClientURI(config.MongoUrl));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
 
         assert mongoClient != null;
         DB Database = mongoClient.getDB("Libra");
