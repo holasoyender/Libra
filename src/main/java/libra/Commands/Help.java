@@ -3,6 +3,7 @@ package libra.Commands;
 import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
+import libra.Utils.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -10,8 +11,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-
-import java.awt.*;
 import java.time.Instant;
 
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
@@ -20,6 +19,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 public class Help implements Command {
 
     private final CommandManager manager;
+    private final Config config = new Config().getConfig();
 
     public Help(CommandManager manager) {
         this.manager = manager;
@@ -34,7 +34,7 @@ public class Help implements Command {
                     .setAuthor("Lista de comandos ", null , context.getJDA().getSelfUser().getAvatarUrl())
                     .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                     .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
-                    .setColor(Color.decode("#8F45E2"))
+                    .setColor(config.EmbedColor)
                     .setTimestamp(Instant.now())
                     .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 
@@ -60,15 +60,12 @@ public class Help implements Command {
         }
 
         EmbedBuilder embed = new EmbedBuilder()
-                .setAuthor("Comando " + command.getName(), context.getJDA().getSelfUser().getAvatarUrl())
+                .setAuthor("Comando: " + command.getName(), context.getJDA().getSelfUser().getAvatarUrl())
                 .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                 .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
-                .setColor(Color.decode("#8F45E2"))
+                .setColor(config.EmbedColor)
                 .setTimestamp(Instant.now())
-                .addField("Nombre", command.getName(), true)
-                .addField("Descripción", command.getDescription(), true)
-                .addField("Forma de uso", command.getUsage(), true)
-                .addField("Permisos", command.getPermissions(), true);
+                .setDescription("**Nombre del comando:** `"+command.getName()+"`\n**Descripción:** "+command.getDescription()+"\n**Forma de uso:** `/"+command.getUsage()+"`\n**Permisos:** "+command.getPermissions());
 
         context.replyEmbeds(embed.build()).queue();
     }

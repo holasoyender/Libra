@@ -2,6 +2,7 @@ package libra.Events;
 
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
+import libra.Utils.Config;
 import libra.Utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class Listener extends ListenerAdapter {
 
     private final Logger Logger = new Logger().getLogger();
     private final CommandManager manager = new CommandManager();
+    private final Config config = new Config().getConfig();
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -64,7 +65,7 @@ public class Listener extends ListenerAdapter {
                     EmbedBuilder Embed = new EmbedBuilder()
                             .setAuthor("Sección de "+Args[2], null, event.getJDA().getSelfUser().getAvatarUrl())
                             .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
-                            .setColor(Color.decode("#8F45E2"))
+                            .setColor(config.EmbedColor)
                             .setTimestamp(Instant.now())
                             .setDescription("Usa `help <Comando>` para más información sobre un comando específico");
 
