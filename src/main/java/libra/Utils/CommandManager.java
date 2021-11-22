@@ -7,7 +7,10 @@ import libra.Database.Database;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandManager {
@@ -38,12 +41,24 @@ public class CommandManager {
         String searchLower = search.toLowerCase();
 
         for (Command command : this.commands) {
-            if(command.getName().equals(searchLower) || command.getAliases().contains(searchLower)){
+            if(command.getName().equals(searchLower)){
                 return command;
             }
         }
 
         return null;
+    }
+
+    public List<Command> getCommandsByCategory(String Category) {
+        List<Command> Commands = new ArrayList<>(Collections.emptyList());
+
+        this.commands.forEach((cmd) -> {
+            if(cmd.getCategory().equals(Category)) {
+                Commands.add(cmd);
+            }
+        });
+
+        return Commands;
     }
 
     public void run(SlashCommandEvent event) {

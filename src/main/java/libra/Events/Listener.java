@@ -3,13 +3,17 @@ package libra.Events;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
 import libra.Utils.Logger;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+import java.time.Instant;
 import java.util.List;
 
 public class Listener extends ListenerAdapter {
@@ -44,5 +48,35 @@ public class Listener extends ListenerAdapter {
         if(user.isBot() || event.getGuild() == null) return;
 
         manager.run(event);
+    }
+
+    @Override
+    public void onSelectionMenu(@NotNull SelectionMenuEvent event) {
+        String Id = event.getValues().get(0);
+        String[] Args = Id.split(":");
+
+        if(Args[0].equals("cmd")) {
+
+            switch (Args[1]) {
+
+                case "help":
+
+                    EmbedBuilder Embed = new EmbedBuilder()
+                            .setAuthor("Sección de "+Args[2], null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
+                            .setColor(Color.decode("#8F45E2"))
+                            .setTimestamp(Instant.now())
+                            .setDescription("Usa `help <Comando>` para más información sobre un comando específico");
+
+                    manager.getCommandsByCategory(Args[2]).forEach((cmd) -> Embed.addField("`"+cmd.getName()+"`", cmd.getDescription(), true));
+                    event.editMessageEmbeds(Embed.build()).queue();
+
+                    break;
+
+                default:
+                    event.reply("Interacción desconocida!").setEphemeral(true).queue();
+                    break;
+            }
+        }
     }
 }

@@ -26,6 +26,11 @@ public class Ping implements Command {
     }
 
     @Override
+    public String getCategory() {
+        return "Bot";
+    }
+
+    @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription());
     }

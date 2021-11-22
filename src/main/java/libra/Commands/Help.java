@@ -4,6 +4,7 @@ import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -12,8 +13,9 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
+
+import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
+
 
 public class Help implements Command {
 
@@ -27,18 +29,25 @@ public class Help implements Command {
     public void run(SlashCommandEvent context, DBObject Guild) {
 
         OptionMapping CommandOption = context.getOption("comando");
-        if(CommandOption == null) {
+        if (CommandOption == null) {
             EmbedBuilder embed = new EmbedBuilder()
-                    .setAuthor("Lista de comandos ", context.getJDA().getSelfUser().getAvatarUrl())
+                    .setAuthor("Lista de comandos ", null , context.getJDA().getSelfUser().getAvatarUrl())
                     .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                     .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                     .setColor(Color.decode("#8F45E2"))
-                    .setTimestamp(Instant.now());
+                    .setTimestamp(Instant.now())
+                    .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 
-            manager.getCommands().stream().map(Command::getName).forEach(
-                    (cmd) -> embed.addField("`"+cmd+"`", Objects.requireNonNull(manager.getCommand(cmd)).getDescription() , true)
-            );
-            context.replyEmbeds(embed.build()).queue();
+
+            context.replyEmbeds(embed.build()).addActionRow(
+                    SelectionMenu.create("cmd:help")
+                            .setPlaceholder("Elija la categoría")
+                            .addOption("Información", "cmd:help:Información", "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
+                            .addOption("Bot", "cmd:help:Bot", "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
+                            .addOption("Música", "cmd:help:Música", "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
+                            .addOption("Ocio", "cmd:help:Ocio", "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
+                            .build()
+            ).queue();
 
             return;
         }
@@ -85,8 +94,8 @@ public class Help implements Command {
     }
 
     @Override
-    public List<String> getAliases() {
-        return List.of("h", "commands", "comandos");
+    public String getCategory() {
+        return "Bot";
     }
 
     @Override

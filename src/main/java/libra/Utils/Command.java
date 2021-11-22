@@ -4,8 +4,6 @@ import com.mongodb.DBObject;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-import java.util.List;
-
 public interface Command {
 
     void run(SlashCommandEvent context, DBObject Guild);
@@ -15,12 +13,8 @@ public interface Command {
     String getDescription();
     String getUsage();
     String getPermissions();
+    String getCategory();
 
     CommandData getSlashData();
-
-    default List<String> getAliases() {
-        return List.of();
-    }
-
 
 }
