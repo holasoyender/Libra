@@ -36,7 +36,7 @@ public class Help implements Command {
                     .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                     .setColor(config.EmbedColor)
                     .setTimestamp(Instant.now())
-                    .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
+                    .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 
 
             context.replyEmbeds(embed.build()).addActionRow(
