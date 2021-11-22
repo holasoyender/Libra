@@ -1,4 +1,4 @@
-package libra.Utils;
+package libra.Config;
 
 import java.awt.*;
 
@@ -12,14 +12,16 @@ public class ConfigExample {
     public String SentryDNS;
     public String MongoUrl;
     public Color EmbedColor;
+    public Emojis Emojis;
 
-    public libra.Utils.ConfigExample getConfig() {
+    public ConfigExample getConfig() {
         Token = "T0K3N";
         OwnerID = "396683727868264449";
         Prefix = ";";
         SentryDNS = "Sentry DNS";
         MongoUrl = "mongodb://localhost:27017/Libra";
         EmbedColor = Color.decode("#5b6cec");
+        Emojis = Emojis.getEmojis();
 
         return this;
     }

@@ -1,7 +1,7 @@
 package libra.Database;
 
 import com.mongodb.*;
-import libra.Utils.Config;
+import libra.Config.Config;
 
 import java.net.UnknownHostException;
 
@@ -28,17 +28,6 @@ public class Database {
 
         return Guilds.findOne(query);
 
-    }
-
-    public static String getGuildPrefix(String guildID) {
-
-        DB Database = mongoClient.getDB("Libra");
-        DBCollection Guilds = Database.getCollection("Guilds");
-        DBObject query = new BasicDBObject("guildID", guildID);
-        DBObject Guild = Guilds.findOne(query);
-
-        if (Guild == null) return config.Prefix;
-        return Guild.get("prefix").toString();
     }
 
     public static void createGuildDocument(String guildID) {

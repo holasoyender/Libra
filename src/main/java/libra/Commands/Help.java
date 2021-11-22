@@ -3,7 +3,7 @@ package libra.Commands;
 import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
-import libra.Utils.Config;
+import libra.Config.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -55,7 +55,7 @@ public class Help implements Command {
         Command command = manager.getCommand(CommandOption.getAsString());
 
         if (command == null) {
-            context.reply("Ese comando no existe!").setEphemeral(true).queue();
+            context.reply(config.Emojis.Error+"Ese comando no existe!").setEphemeral(true).queue();
             return;
         }
 
@@ -65,7 +65,7 @@ public class Help implements Command {
                 .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                 .setColor(config.EmbedColor)
                 .setTimestamp(Instant.now())
-                .setDescription("**Nombre del comando:** `"+command.getName()+"`\n**Descripción:** "+command.getDescription()+"\n**Forma de uso:** `/"+command.getUsage()+"`\n**Permisos:** "+command.getPermissions());
+                .setDescription("Para listar todos los comandos puedes usar `/help`\n\n**Nombre del comando:** `"+command.getName()+"`\n**Descripción:** "+command.getDescription()+"\n**Forma de uso:** `/"+command.getUsage()+"`\n**Permisos:** "+command.getPermissions());
 
         context.replyEmbeds(embed.build()).queue();
     }

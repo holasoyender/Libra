@@ -2,7 +2,7 @@ package libra.Events;
 
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
-import libra.Utils.Config;
+import libra.Config.Config;
 import libra.Utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -38,7 +38,6 @@ public class Listener extends ListenerAdapter {
 
         for(Command command : commands) {
             Commands.addCommands(command.getSlashData()).queue();
-            System.out.println("Registrado el comando: "+command.getName());
         }
     }
 
@@ -75,7 +74,7 @@ public class Listener extends ListenerAdapter {
                     break;
 
                 default:
-                    event.reply("Interacción desconocida!").setEphemeral(true).queue();
+                    event.reply(config.Emojis.Error+"Interacción desconocida!").setEphemeral(true).queue();
                     break;
             }
         }
