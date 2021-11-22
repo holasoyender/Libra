@@ -1,6 +1,7 @@
 package libra.Utils;
 
 import com.mongodb.DBObject;
+import libra.Commands.Avatar;
 import libra.Commands.Help;
 import libra.Commands.Ping;
 import libra.Database.Database;
@@ -22,6 +23,7 @@ public class CommandManager {
     public CommandManager(){
         addCommand(new Ping());
         addCommand(new Help(this));
+        addCommand(new Avatar());
     }
 
     private void addCommand(Command cmd) {

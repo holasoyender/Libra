@@ -5,6 +5,7 @@ import libra.Utils.CommandManager;
 import libra.Config.Config;
 import libra.Utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
@@ -26,7 +27,12 @@ public class Listener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
 
-        CommandListUpdateAction Commands = event.getJDA().getGuildById("704029755975925841").updateCommands();
+        Guild Guild = event.getJDA().getGuildById("704029755975925841");
+        if(Guild == null) {
+            System.out.println("No existe el servidor de tests");
+            return;
+        }
+        CommandListUpdateAction Commands = Guild.updateCommands();
         /*
         * Para el uso global de los slash usa esto (El otro es solo para el servidor de test)
         * CommandListUpdateAction Commands = event.getJDA().updateCommands();
@@ -37,6 +43,7 @@ public class Listener extends ListenerAdapter {
 
 
         for(Command command : commands) {
+            System.out.println("Registrado el comando "+command.getName());
             Commands.addCommands(command.getSlashData()).queue();
         }
     }
