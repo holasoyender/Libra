@@ -42,10 +42,10 @@ public class Help implements Command {
             context.replyEmbeds(embed.build()).addActionRow(
                     SelectionMenu.create("cmd:help")
                             .setPlaceholder("Elija la categoría")
-                            .addOption("Información", "cmd:help:Información", "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
-                            .addOption("Bot", "cmd:help:Bot", "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
-                            .addOption("Música", "cmd:help:Música", "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
-                            .addOption("Ocio", "cmd:help:Ocio", "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
+                            .addOption("Información", "cmd:help:Información:"+context.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
+                            .addOption("Bot", "cmd:help:Bot:"+context.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
+                            .addOption("Música", "cmd:help:Música:"+context.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
+                            .addOption("Ocio", "cmd:help:Ocio:"+context.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
                             .build()
             ).queue();
 

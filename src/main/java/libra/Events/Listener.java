@@ -27,7 +27,7 @@ public class Listener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
 
-        Guild Guild = event.getJDA().getGuildById("704029755975925841");
+        Guild Guild = event.getJDA().getGuildById("903340301442252821");
         if(Guild == null) {
             System.out.println("No existe el servidor de tests");
             return;
@@ -63,6 +63,11 @@ public class Listener extends ListenerAdapter {
         String[] Args = Id.split(":");
 
         if(Args[0].equals("cmd")) {
+
+            if(!event.getUser().getId().equals(Args[3])) {
+                event.reply(config.Emojis.Error+"No puedes usar este menú!").setEphemeral(true).queue();
+                return;
+            }
 
             switch (Args[1]) {
 
