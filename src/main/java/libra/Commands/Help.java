@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.time.Instant;
 
+import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 
 
@@ -67,7 +68,9 @@ public class Help implements Command {
                 .setTimestamp(Instant.now())
                 .setDescription("Para listar todos los comandos puedes usar `/help`\n\n**Nombre del comando:** `"+command.getName()+"`\n**Descripción:** "+command.getDescription()+"\n**Forma de uso:** `/"+command.getUsage()+"`\n**Permisos:** "+command.getPermissions());
 
-        context.replyEmbeds(embed.build()).queue();
+        context.replyEmbeds(embed.build()).addActionRow(
+                Button.primary("cmd:help:Main:"+context.getUser().getId(), "Todos los comandos")
+        ).queue();
     }
 
     @Override
