@@ -19,18 +19,34 @@ public class Main {
         JDABuilder builder = JDABuilder.createDefault(null);
         Config config = new Config().getConfig();
 
-        builder.disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE);
-        builder.setBulkDeleteSplittingEnabled(false);
+        builder.disableCache(
+                CacheFlag.MEMBER_OVERRIDES,
+                CacheFlag.VOICE_STATE,
+                CacheFlag.ACTIVITY
+        );
+        builder.setBulkDeleteSplittingEnabled(true);
         builder.setCompression(Compression.NONE);
         builder.setActivity(Activity.watching("the world"));
 
         builder.setToken(config.Token);
         builder.addEventListeners(new Listener());
 
-        builder.disableCache(CacheFlag.ACTIVITY);
         builder.setMemberCachePolicy(MemberCachePolicy.VOICE.or(MemberCachePolicy.OWNER));
         builder.setChunkingFilter(ChunkingFilter.NONE);
-        builder.disableIntents(GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_PRESENCES);
+        builder.disableIntents(
+                GatewayIntent.GUILD_MESSAGE_TYPING,
+                GatewayIntent.GUILD_PRESENCES,
+                GatewayIntent.GUILD_MESSAGES,
+                GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                GatewayIntent.DIRECT_MESSAGE_TYPING,
+                GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                GatewayIntent.GUILD_INVITES
+        );
+        builder.enableIntents(
+                GatewayIntent.GUILD_MEMBERS,
+                GatewayIntent.DIRECT_MESSAGES,
+                GatewayIntent.GUILD_VOICE_STATES
+        );
         builder.setLargeThreshold(50);
 
         try {

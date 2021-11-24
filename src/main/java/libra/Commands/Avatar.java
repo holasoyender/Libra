@@ -17,7 +17,9 @@ public class Avatar implements Command {
     public void run(SlashCommandEvent context, DBObject Guild) {
         OptionMapping User = context.getOption("usuario");
         if(User == null) {
-            EmbedBuilder Embed = new EmbedBuilder().setImage(context.getUser().getAvatarUrl()+ "?size=512").setColor(config.EmbedColor);
+            String URL = context.getUser().getAvatarUrl()+ "?size=512";
+            if(context.getUser().getAvatarUrl() == null) URL = "https://cdn.discordapp.com/embed/avatars/0.png";
+            EmbedBuilder Embed = new EmbedBuilder().setImage(URL).setColor(config.EmbedColor);
             context.reply(config.Emojis.Success+"Aquí tienes tu avatar "+context.getUser().getAsMention()).addEmbeds(Embed.build()).queue();
         }else {
             String URL = User.getAsUser().getAvatarUrl()+ "?size=512";

@@ -2,9 +2,8 @@ package libra.Utils;
 
 import com.mongodb.DBObject;
 import libra.Commands.Avatar;
-import libra.Commands.Help;
-import libra.Commands.Ping;
 import libra.Database.Database;
+import libra.Commands.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import javax.annotation.Nullable;
@@ -20,13 +19,14 @@ public class CommandManager {
         return commands;
     }
 
-    public CommandManager(){
+    public CommandManager() {
         addCommand(new Ping());
         addCommand(new Help(this));
         addCommand(new Avatar());
+        addCommand(new Info());
     }
 
-    private void addCommand(Command cmd) {
+    public void addCommand(Command cmd) {
         boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
         if(nameFound) {
