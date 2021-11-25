@@ -11,4 +11,9 @@ cache:
     - ".gradle/wrapper"
     - ".gradle/caches"
 
-script: "./gradlew build"
+jobs:
+  fast_finish: true
+  jdk: openjdk11
+  script:
+    - "./gradlew build"
+
