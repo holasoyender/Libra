@@ -20,6 +20,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Bot());
         addCommand(new Ping());
         addCommand(new Help(this));
         addCommand(new Avatar());

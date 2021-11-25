@@ -107,8 +107,14 @@ public class Listener extends ListenerAdapter {
             switch (Args[1]) {
 
                 case "help":
+                case "bot":
 
                     if(Args[2].equals("Main")) {
+
+                        if(!event.getUser().getId().equals(Args[3])) {
+                            event.reply(config.Emojis.Error+"No puedes usar este botón!").setEphemeral(true).queue();
+                            return;
+                        }
 
                         EmbedBuilder Embed = new EmbedBuilder()
                                 .setAuthor("Lista de comandos ", null , event.getJDA().getSelfUser().getAvatarUrl())
@@ -132,6 +138,7 @@ public class Listener extends ListenerAdapter {
                     }
 
                     break;
+
             }
         }
 
