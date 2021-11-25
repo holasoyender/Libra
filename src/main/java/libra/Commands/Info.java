@@ -42,7 +42,7 @@ public class Info implements Command {
         if(Member != null && Member.isOwner()) AcBadge = "  <:Owner:913501281400815686>";
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.EmbedColor)
-                .addField(User.getName()+AcBadge , String.format("```yaml\nID: %s```",User.getId()),false)
+                .addField(User.getAsTag()+AcBadge , String.format("```yaml\nID: %s```",User.getId()),false)
                 .addField("Badges", this.badges(User), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
                 .addField("Rol más alto", Member != null ? Member.getRoles().get(0).getAsMention() : "Sin roles", true)
