@@ -1,5 +1,5 @@
 language: java
-sudo: false
+sudo: true
 
 env:
   global:
@@ -11,4 +11,4 @@ cache:
     - ".gradle/wrapper"
     - ".gradle/caches"
 
-script: "mvn clean package"
+script: "./gradlew build"
