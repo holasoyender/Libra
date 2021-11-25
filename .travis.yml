@@ -9,6 +9,8 @@ jdk: openjdk11
 
 before_script:
   - chmod +x gradlew
+before_install:
+  - chmod +x gradlew
 script:
   - ./gradlew build
 
