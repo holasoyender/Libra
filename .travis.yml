@@ -5,17 +5,10 @@ env:
   global:
     - BUILD_NUMBER: "$TRAVIS_BUILD_NUMBER"
 
-cache:
-  directories:
-    - "$HOME/.gradle"
-    - ".gradle/wrapper"
-    - ".gradle/caches"
+jdk: openjdk11
 
-jobs:
-  fast_finish: true
-  jdk: openjdk11
-  before_script:
-    - chmod +x gradlew
-  script:
-    - ./gradlew build
+before_script:
+  - chmod +x gradlew
+script:
+  - ./gradlew build
 
