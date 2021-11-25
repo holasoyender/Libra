@@ -4,8 +4,6 @@ import java.awt.*;
 
 public class Config {
 
-    //Renombrar archivo y clase a Config
-
     public String Token;
     public String OwnerID;
     public String Prefix;
