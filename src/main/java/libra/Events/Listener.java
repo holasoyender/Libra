@@ -36,10 +36,11 @@ public class Listener extends ListenerAdapter {
             return;
         }
         CommandListUpdateAction Commands = Guild.updateCommands();
-        /*
-        * Para el uso global de los slash usa esto (El otro es solo para el servidor de test)
-        * CommandListUpdateAction Commands = event.getJDA().updateCommands();
-        * */
+        Commands.queue();
+
+        CommandListUpdateAction GlobalCommands = event.getJDA().updateCommands();
+        GlobalCommands.queue();
+
 
         CommandManager manager = new CommandManager();
         List<Command> commands = manager.getCommands();

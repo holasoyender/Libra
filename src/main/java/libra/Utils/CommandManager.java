@@ -24,6 +24,7 @@ public class CommandManager {
         addCommand(new Help(this));
         addCommand(new Avatar());
         addCommand(new Info());
+        addCommand(new Say());
     }
 
     public void addCommand(Command cmd) {

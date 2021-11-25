@@ -22,9 +22,13 @@ public class Info implements Command {
     public void run(SlashCommandEvent context, DBObject Guild) {
 
         OptionMapping UserOption = context.getOption("usuario");
+        Member Member = null;
         User User;
+        StringBuilder Roles = new StringBuilder();
+
         if (UserOption == null) {
             User = context.getUser();
+            Member = context.getMember();
         } else {
             User = UserOption.getAsUser();
         }
@@ -40,11 +44,20 @@ public class Info implements Command {
                 .addField("Nombre / Nick", User.getAsTag(), true)
                 .addField("Creado el ", "`" + User.getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", true);
 
-        StringBuilder Roles = new StringBuilder();
-        if(context.getGuild() == null) return;
-        Member Member = context.getGuild().getMember(User);
         if(Member == null) {
-            Embed.addField("Roles", "El usuario no está en el servidor", true);
+            Member = context.getGuild().getMember(User);
+
+            if(Member == null) {
+                Embed.addField("Roles", "El usuario no está en el servidor", true);
+            }else {
+                for(Role role : Member.getRoles()) {
+                    Roles.append(role.getAsMention()).append("\n");
+                }
+                if (Roles.length() <= 0)
+                    Roles = new StringBuilder("Sin roles.");
+                Embed.addField("Roles", Roles.toString(),true);
+                Embed.addField("Unido al servidor el", "`" + Member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", true);
+            }
         }else {
             for(Role role : Member.getRoles()) {
                 Roles.append(role.getAsMention()).append("\n");
@@ -52,12 +65,8 @@ public class Info implements Command {
             if (Roles.length() <= 0)
                 Roles = new StringBuilder("Sin roles.");
             Embed.addField("Roles", Roles.toString(),true);
+            Embed.addField("Unido al servidor el", "`" + Member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", true);
         }
-        /*
-        * TODO:
-        *   - Dice que no está en el servidor
-        * */
-
 
         context.replyEmbeds(Embed.build()).queue();
 
