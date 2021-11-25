@@ -2,7 +2,7 @@
 .gradle
 .idea
 app/build
-src/main/java/libra/Config/Configb.java
+src/main/java/libra/Config/ConfigB.java
 
 # Ignore Gradle build output directory
 build
