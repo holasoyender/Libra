@@ -5,4 +5,4 @@
 Este es mi primer proyecto de Java, no os esperéis algo muy grande, aún sigo aprendiendo
 
 ## Links
-[Haz click aquí](https://discordapp.com/oauth2/authorize?client_id=829263504435052614&scope=bot&permissions=8) para añadir a Libra a tu servidor!
+[Haz click aquí](https://discordapp.com/oauth2/authorize?client_id=829263504435052614&permissions=8&scope=bot%20applications.commands) para añadir a Libra a tu servidor!
