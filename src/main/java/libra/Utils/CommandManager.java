@@ -1,6 +1,7 @@
 package libra.Utils;
 
 import libra.Commands.Avatar;
+import libra.Config.Config;
 import libra.Database.Database;
 import libra.Commands.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -14,12 +15,14 @@ import java.util.List;
 public class CommandManager {
 
     private final List<Command> commands = new ArrayList<>();
+    private final Config config = new Config().getConfig();
 
     public List<Command> getCommands() {
         return commands;
     }
 
     public CommandManager() {
+        addCommand(new Invitar());
         addCommand(new Server());
         addCommand(new Bot());
         addCommand(new Ping());
@@ -73,7 +76,7 @@ public class CommandManager {
         Command cmd = this.getCommand(invoke);
 
         if(cmd != null) {
-            cmd.run(event, Guild);
+            cmd.run(event, Guild, config);
         }
     }
 

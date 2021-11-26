@@ -12,7 +12,7 @@ public class Ping implements Command {
     private final Config config = new Config().getConfig();
 
     @Override
-    public void run(SlashCommandEvent context, Document Guild) {
+    public void run(SlashCommandEvent context, Document Guild,  Config config) {
         JDA jda = context.getJDA();
         context.replyFormat(config.Emojis.Ping+"Mi ping es de `%sms`", jda.getGatewayPing()).queue();
     }

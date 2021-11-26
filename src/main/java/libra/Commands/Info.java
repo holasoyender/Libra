@@ -15,10 +15,8 @@ import org.bson.Document;
 
 public class Info implements Command {
 
-    private final Config config = new Config().getConfig();
-
     @Override
-    public void run(SlashCommandEvent context, Document Guild) {
+    public void run(SlashCommandEvent context, Document Guild,  Config config) {
         if(context.getGuild() == null) return;
 
         OptionMapping UserOption = context.getOption("usuario");

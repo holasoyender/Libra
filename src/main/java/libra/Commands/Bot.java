@@ -12,10 +12,8 @@ import java.time.Instant;
 
 public class Bot implements Command {
 
-    private final Config config = new Config().getConfig();
-
     @Override
-    public void run(SlashCommandEvent context, Document Guild) {
+    public void run(SlashCommandEvent context, Document Guild,  Config config) {
 
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.EmbedColor)

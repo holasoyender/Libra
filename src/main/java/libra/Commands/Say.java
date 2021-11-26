@@ -11,10 +11,8 @@ import org.bson.Document;
 
 public class Say implements Command {
 
-    private final Config config = new Config().getConfig();
-
     @Override
-    public void run(SlashCommandEvent context, Document Guild) {
+    public void run(SlashCommandEvent context, Document Guild,  Config config) {
 
         OptionMapping SayRaw = context.getOption("texto");
 

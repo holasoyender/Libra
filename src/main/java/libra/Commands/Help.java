@@ -20,14 +20,13 @@ import org.bson.Document;
 public class Help implements Command {
 
     private final CommandManager manager;
-    private final Config config = new Config().getConfig();
 
     public Help(CommandManager manager) {
         this.manager = manager;
     }
 
     @Override
-    public void run(SlashCommandEvent context, Document Guild) {
+    public void run(SlashCommandEvent context, Document Guild,  Config config) {
 
         OptionMapping CommandOption = context.getOption("comando");
         if (CommandOption == null) {
