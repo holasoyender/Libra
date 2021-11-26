@@ -22,6 +22,8 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Gato());
+        addCommand(new Perro());
         addCommand(new Invitar());
         addCommand(new Server());
         addCommand(new Bot());
