@@ -46,7 +46,7 @@ public class Info implements Command {
                 .addField("Badges", this.badges(User), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
                 .addField("Rol más alto", Member != null ? Member.getRoles().get(0).getAsMention() : "Sin roles", true)
-                .setImage(User.retrieveProfile().complete().getBannerUrl())
+                .setImage(User.retrieveProfile().complete().getBannerUrl()+"?size=512")
                 .setThumbnail(URL);
 
         if(Member == null) {
