@@ -12,13 +12,18 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.time.Instant;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Listener extends ListenerAdapter {
 
@@ -49,6 +54,44 @@ public class Listener extends ListenerAdapter {
         for(Command command : commands) {
             System.out.println("Registrado el comando "+command.getName());
             Commands.addCommands(command.getSlashData()).queue();
+        }
+    }
+
+    @Override
+    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+        if(!event.getAuthor().getId().equals(config.OwnerID)) return;
+
+        String prefix = config.Prefix;
+        String raw = event.getMessage().getContentRaw();
+
+        if(!raw.startsWith(prefix)) return;
+        String Command = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split(" ")[0];
+        String[] args = raw.replace(prefix+Command+" ", "").split(" ");
+        switch (Command) {
+
+            case "eval":
+
+                String toEval = String.join(" ", args);
+                if(toEval.length() <= 0) return;
+
+                ScriptEngine Script = new ScriptEngineManager().getEngineByName("groovy");
+
+                Script.put("jda", event.getJDA());
+                Script.put("shardManager", event.getJDA().getShardManager());
+                Script.put("guild", event.getGuild());
+                Script.put("channel", event.getChannel());
+                Script.put("msg", event.getMessage());
+
+                try{
+                    String result = Script.eval(toEval).toString();
+                    event.getMessage().reply(String.format("```java\n%s```", result.replaceAll(event.getJDA().getToken(), "T0K3N"))).mentionRepliedUser(false).queue();
+                }catch(ScriptException ex){
+
+                    event.getMessage().reply(String.format("```java\n%s```", ex.getMessage().replaceAll(event.getJDA().getToken(), "T0K3N"))).mentionRepliedUser(false).queue();
+                }
+
+                break;
+            default:
         }
     }
 

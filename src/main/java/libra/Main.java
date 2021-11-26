@@ -36,7 +36,6 @@ public class Main {
         builder.disableIntents(
                 GatewayIntent.GUILD_MESSAGE_TYPING,
                 GatewayIntent.GUILD_PRESENCES,
-                GatewayIntent.GUILD_MESSAGES,
                 GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                 GatewayIntent.DIRECT_MESSAGE_TYPING,
                 GatewayIntent.GUILD_MESSAGE_REACTIONS,
