@@ -15,11 +15,11 @@ public class Config {
     public Config getConfig() {
         Token = "T0K3N";
         OwnerID = "396683727868264449";
-        Prefix = ";";
+        Prefix = "-";
         SentryDNS = "Sentry DNS";
         MongoUrl = "mongodb://localhost:27017/Libra";
         EmbedColor = Color.decode("#5b6cec");
-        Emojis = Emojis.getEmojis();
+        Emojis = new Emojis().getEmojis();
 
         return this;
     }
