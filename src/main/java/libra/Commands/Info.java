@@ -11,8 +11,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-
-import java.time.format.DateTimeFormatter;
+import net.dv8tion.jda.api.utils.TimeFormat;
 
 public class Info implements Command {
 
@@ -20,6 +19,7 @@ public class Info implements Command {
 
     @Override
     public void run(SlashCommandEvent context, DBObject Guild) {
+        if(context.getGuild() == null) return;
 
         OptionMapping UserOption = context.getOption("usuario");
         Member Member = null;
@@ -39,13 +39,14 @@ public class Info implements Command {
         String AcBadge = "";
 
         if(User.isBot()) AcBadge = "  <:Bot1:913500818345439283><:Bot2:913500818584518706>";
-        if(Member != null && Member.isOwner()) AcBadge = "  <:Owner:913501281400815686>";
+        if(User.getId().equals(context.getGuild().getOwnerId())) AcBadge = "  <:Owner:913501281400815686>";
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.EmbedColor)
                 .addField(User.getAsTag()+AcBadge , String.format("```yaml\nID: %s```",User.getId()),false)
                 .addField("Badges", this.badges(User), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
                 .addField("Rol más alto", Member != null ? Member.getRoles().get(0).getAsMention() : "Sin roles", true)
+                .setImage(User.retrieveProfile().complete().getBannerUrl())
                 .setThumbnail(URL);
 
         if(Member == null) {
@@ -65,7 +66,7 @@ public class Info implements Command {
                     return;
                 }
                 Embed.addField("Todos los Roles", "```\n"+Roles+"```",false);
-                Embed.addField("<:Invite:913508352108150784>  Unido al servidor", "`" +Member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", false);
+                Embed.addField("<:Invite:913508352108150784>  Unido al servidor", TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
             }
         }else {
             for(Role role : Member.getRoles()) {
@@ -77,10 +78,10 @@ public class Info implements Command {
             }
 
             Embed.addField("Todos los Roles", "```\n"+Roles+"```",false);
-            Embed.addField("<:Invite:913508352108150784>  Unido al servidor", "`" +Member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", false);
+            Embed.addField("<:Invite:913508352108150784>  Unido al servidor",TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
         }
 
-        Embed.addField("<:Time:913509404614230016>  Cuenta creada", "`" +User.getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`", false);
+        Embed.addField("<:Time:913509404614230016>  Cuenta creada", TimeFormat.DEFAULT.format(User.getTimeCreated())+" ("+TimeFormat.RELATIVE.format(User.getTimeCreated())+")", false);
 
         context.replyEmbeds(Embed.build()).queue();
 
