@@ -1,14 +1,18 @@
 package libra.Events;
 
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.WebhookClientBuilder;
+import club.minnced.discord.webhook.send.WebhookEmbed;
+import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
 import libra.Config.Config;
 import libra.Utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.*;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -21,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.awt.*;
+import java.sql.Struct;
 import java.time.Instant;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -31,9 +37,19 @@ public class Listener extends ListenerAdapter {
     private final CommandManager manager = new CommandManager();
     private final Config config = new Config().getConfig();
 
+    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder("https://discord.com/api/webhooks/913900673244987402/L4tHC7CzekkirBGzGLc18aekAda-UM-WPR5xYlKZ1tR5v4bHYSdj23GOKXUxjHK1pJTX");
+    private final WebhookClient internalLogWebhook = WebhookBuilder.build();
+
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
+
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0xD6D150)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha iniciado", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        internalLogWebhook.send(Embed);
 
         Guild Guild = event.getJDA().getGuildById("903340301442252821");
         if(Guild == null) {
@@ -54,7 +70,7 @@ public class Listener extends ListenerAdapter {
         int i = 0;
         for(Command command : commands) {
             i = i+1;
-            Commands.addCommands(command.getSlashData()).queue();
+            //Commands.addCommands(command.getSlashData()).queue();
         }
         Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
     }
@@ -187,5 +203,69 @@ public class Listener extends ListenerAdapter {
             }
         }
 
+    }
+
+    @Override
+    public void onReconnected(@NotNull ReconnectedEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0x11F78A)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha reconectado", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        internalLogWebhook.send(Embed);
+    }
+
+    @Override
+    public void onDisconnect(@NotNull DisconnectEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0xEA4F4C)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha desconectado", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        internalLogWebhook.send(Embed);
+    }
+
+    @Override
+    public void onResumed(@NotNull ResumedEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0x596ED6)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha resumido", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        internalLogWebhook.send(Embed);
+    }
+
+    @Override
+    public void onShutdown(@NotNull ShutdownEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0xEA4F4C)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha apagado", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        internalLogWebhook.send(Embed);
+    }
+
+    @Override
+    public void onGuildJoin(@NotNull GuildJoinEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0x5CD6FA)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Me han metido en un nuevo servidor servidor", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", ""+event.getGuild().getMemberCount()))
+                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
+                .build();
+
+        internalLogWebhook.send(Embed);
+    }
+
+    @Override
+    public void onGuildLeave(@NotNull GuildLeaveEvent event) {
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0xEB4E4B)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Me han sacado de un servidor", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", ""+event.getGuild().getMemberCount()))
+                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
+                .build();
+
+        internalLogWebhook.send(Embed);
     }
 }
