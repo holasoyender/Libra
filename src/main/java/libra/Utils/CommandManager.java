@@ -5,6 +5,7 @@ import libra.Commands.Avatar;
 import libra.Database.Database;
 import libra.Commands.*;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.bson.Document;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class CommandManager {
     public void run(SlashCommandEvent event) {
 
         if(event.getGuild() == null) return;
-        DBObject Guild = Database.getGuildDocument(event.getGuild().getId());
+        Document Guild = Database.getGuildDocument(event.getGuild().getId());
 
         String invoke = event.getName();
         Command cmd = this.getCommand(invoke);

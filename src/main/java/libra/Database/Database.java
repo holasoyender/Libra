@@ -1,47 +1,43 @@
 package libra.Database;
 
 import com.mongodb.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import libra.Config.Config;
-
-import java.net.UnknownHostException;
+import org.bson.Document;
 
 public class Database {
 
     private static final Config config = new Config().getConfig();
-    private static MongoClient mongoClient = null;
-    static {
-        try {
-            mongoClient = new MongoClient(new MongoClientURI(config.MongoUrl));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-    public static DBObject getGuildDocument(String guildID) {
+    private static final MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(config.MongoUrl)).build();
+    private static final MongoClient mongoClient = MongoClients.create(settings);
 
-        assert mongoClient != null;
-        DB Database = mongoClient.getDB("Libra");
 
-        DBCollection Guilds = Database.getCollection("Guilds");
-        DBObject query = new BasicDBObject("guildID", guildID);
+    public static Document getGuildDocument(String guildID) {
 
-        return Guilds.findOne(query);
+        MongoDatabase Database = mongoClient.getDatabase("Libra");
+        MongoCollection<Document> Guilds = Database.getCollection("Guilds");
+
+
+        return Guilds.find(new Document("guildID", guildID)).first();
 
     }
 
     public static void createGuildDocument(String guildID) {
 
-        assert mongoClient != null;
-        DB Database = mongoClient.getDB("Libra");
-        DBCollection Guilds = Database.getCollection("Guilds");
-        DBObject query = new BasicDBObject("guildID", guildID);
-        DBObject Guild = Guilds.findOne(query);
+        MongoDatabase Database = mongoClient.getDatabase("Libra");
+        MongoCollection<Document> Guilds = Database.getCollection("Guilds");
+
+        Document Guild = Guilds.find(new Document("guildID", guildID)).first();
 
         if (Guild != null) return;
 
-        DBObject newDocument = new BasicDBObject("guildID", guildID).append("prefix", config.Prefix);
-        Guilds.insert(newDocument);
+        Document newDocument = new Document("guildID", guildID).append("prefix", config.Prefix);
+        Guilds.insertOne(newDocument);
 
     }
 }

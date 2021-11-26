@@ -1,6 +1,5 @@
 package libra.Commands;
 
-import com.mongodb.DBObject;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
 import libra.Config.Config;
@@ -15,6 +14,7 @@ import java.time.Instant;
 
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
+import org.bson.Document;
 
 
 public class Help implements Command {
@@ -27,7 +27,7 @@ public class Help implements Command {
     }
 
     @Override
-    public void run(SlashCommandEvent context, DBObject Guild) {
+    public void run(SlashCommandEvent context, Document Guild) {
 
         OptionMapping CommandOption = context.getOption("comando");
         if (CommandOption == null) {

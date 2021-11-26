@@ -1,13 +1,12 @@
 package libra.Commands;
 
-import com.mongodb.DBObject;
 import libra.Config.Config;
 import libra.Utils.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.components.Button;
+import org.bson.Document;
 
 import java.time.Instant;
 
@@ -16,7 +15,7 @@ public class Bot implements Command {
     private final Config config = new Config().getConfig();
 
     @Override
-    public void run(SlashCommandEvent context, DBObject Guild) {
+    public void run(SlashCommandEvent context, Document Guild) {
 
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.EmbedColor)

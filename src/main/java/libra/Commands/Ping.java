@@ -1,18 +1,18 @@
 package libra.Commands;
 
-import com.mongodb.DBObject;
 import libra.Config.Config;
 import libra.Utils.Command;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import org.bson.Document;
 
 public class Ping implements Command {
 
     private final Config config = new Config().getConfig();
 
     @Override
-    public void run(SlashCommandEvent context, DBObject Guild) {
+    public void run(SlashCommandEvent context, Document Guild) {
         JDA jda = context.getJDA();
         context.replyFormat(config.Emojis.Ping+"Mi ping es de `%sms`", jda.getGatewayPing()).queue();
     }
