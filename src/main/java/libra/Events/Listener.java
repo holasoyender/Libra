@@ -51,10 +51,12 @@ public class Listener extends ListenerAdapter {
         List<Command> commands = manager.getCommands();
 
 
+        int i = 0;
         for(Command command : commands) {
-            System.out.println("Registrado el comando "+command.getName());
+            i = i+1;
             Commands.addCommands(command.getSlashData()).queue();
         }
+        Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
     }
 
     @Override
