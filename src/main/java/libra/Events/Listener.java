@@ -37,7 +37,7 @@ public class Listener extends ListenerAdapter {
     private final CommandManager manager = new CommandManager();
     private final Config config = new Config().getConfig();
 
-    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder("https://discord.com/api/webhooks/913900673244987402/L4tHC7CzekkirBGzGLc18aekAda-UM-WPR5xYlKZ1tR5v4bHYSdj23GOKXUxjHK1pJTX");
+    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder(config.LogWebhookURL);
     private final WebhookClient internalLogWebhook = WebhookBuilder.build();
 
     @Override

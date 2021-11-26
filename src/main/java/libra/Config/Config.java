@@ -11,6 +11,7 @@ public class Config {
     public String MongoUrl;
     public Color EmbedColor;
     public Emojis Emojis;
+    public String LogWebhookURL;
 
     public Config getConfig() {
         Token = "T0K3N";
@@ -20,6 +21,7 @@ public class Config {
         MongoUrl = "mongodb://localhost:27017/Libra";
         EmbedColor = Color.decode("#5b6cec");
         Emojis = new Emojis().getEmojis();
+        LogWebhookURL= "";
 
         return this;
     }
