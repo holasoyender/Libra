@@ -17,7 +17,9 @@ import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +79,18 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+
+        if(event.getAuthor().isBot()) return;
+        if(event.getMessage().getMentionedMembers().size() > 0) {
+            if (event.getMessage().getMentionedMembers().get(0).getId().equals(event.getJDA().getSelfUser().getId())) {
+                event.getChannel().sendMessage("**Hola :wave:**\nSoy `Libra`, un bot para Discord completamente en **Español** de código abierto.\nAquí te dejo unos botones para obtener más información").setActionRow(
+                        Button.primary("cmd:bot:Main:" + event.getAuthor().getId(), "Lista de comandos"),
+                        Button.link("https://libra.kirobot.cc", "Página web"),
+                        Button.link("https://discord.com/api/oauth2/authorize?client_id=" + event.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands", "Invita a Libra")
+                ).queue();
+            }
+        }
+        /* ------ Desarrollador ------ */
         if(!event.getAuthor().getId().equals(config.OwnerID)) return;
 
         String prefix = config.Prefix;
@@ -117,6 +131,18 @@ public class Listener extends ListenerAdapter {
                     break;
             default:
         }
+    }
+
+    @Override
+    public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
+        if(event.getAuthor().isBot()) return;
+
+        event.getChannel().sendMessage("**Hola :wave:**\nSoy `Libra`, un bot para Discord completamente en **Español** de código abierto.\nAquí te dejo unos botones para obtener más información").setActionRow(
+                Button.primary("cmd:bot:Main:" + event.getAuthor().getId(), "Lista de comandos"),
+                Button.link("https://libra.kirobot.cc", "Página web"),
+                Button.link("https://discord.com/api/oauth2/authorize?client_id=" + event.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands", "Invita a Libra")
+        ).queue();
+
     }
 
     @Override
@@ -191,8 +217,7 @@ public class Listener extends ListenerAdapter {
                                 .setTimestamp(Instant.now())
                                 .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + event.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 
-
-                        event.editMessageEmbeds(Embed.build()).setActionRow(
+                        event.editMessageEmbeds(Embed.build()).setContent("").setActionRow(
                                 SelectionMenu.create("cmd:help")
                                         .setPlaceholder("Elija la categoría")
                                         .addOption("Información", "cmd:help:Información:"+event.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
