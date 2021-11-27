@@ -1,4 +1,4 @@
-package libra.Commands;
+package libra.Commands.Bot;
 
 import libra.Utils.Command;
 import libra.Utils.CommandManager;

@@ -1,4 +1,4 @@
-package libra.Commands;
+package libra.Commands.Ocio;
 
 import libra.Config.Config;
 import libra.Utils.Command;

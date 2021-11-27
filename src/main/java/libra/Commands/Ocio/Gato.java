@@ -1,4 +1,4 @@
-package libra.Commands;
+package libra.Commands.Ocio;
 
 import libra.Config.Config;
 import libra.Utils.Command;
@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -15,12 +16,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-public class Perro implements Command {
+public class Gato implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
-
         try {
-            URL Api = new URL("https://dog.ceo/api/breeds/image/random");
+            URL Api = new URL("https://api.thecatapi.com/v1/images/search");
             HttpURLConnection http = (HttpURLConnection) Api.openConnection();
             http.setRequestMethod("GET");
             http.setRequestProperty("Accept", "application/json");
@@ -39,12 +39,13 @@ public class Perro implements Command {
 
             scanner.close();
             JSONParser parse = new JSONParser();
-            JSONObject data = (JSONObject) parse.parse(inline);
+            JSONArray rawData = (JSONArray) parse.parse(inline);
+            JSONObject data = (JSONObject) rawData.get(0);
 
             EmbedBuilder Embed = new EmbedBuilder()
                     .setColor(config.EmbedColor)
-                    .setTitle("Aquí tienes una foto de un perro!")
-                    .setImage(data.get("message").toString());
+                    .setTitle("Aquí tienes una foto de un gato!")
+                    .setImage(data.get("url").toString());
 
             context.replyEmbeds(Embed.build()).queue();
 
@@ -54,22 +55,21 @@ public class Perro implements Command {
             context.reply("Ha ocurrido un error con la API!").setEphemeral(true).queue();
             e.printStackTrace();
         }
-
     }
 
     @Override
     public String getName() {
-        return "perro";
+        return "gato";
     }
 
     @Override
     public String getDescription() {
-        return "Manda una foto aleatorio de un perro";
+        return "Manda una foto aleatorio de un gato";
     }
 
     @Override
     public String getUsage() {
-        return "perro";
+        return "gato";
     }
 
     @Override
