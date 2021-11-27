@@ -46,7 +46,7 @@ public class Listener extends ListenerAdapter {
 
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0xD6D150)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha iniciado", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha iniciado en la shard "+event.getJDA().getShardInfo().getShardId(), event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
         internalLogWebhook.send(Embed);
@@ -70,7 +70,7 @@ public class Listener extends ListenerAdapter {
         int i = 0;
         for(Command command : commands) {
             i = i+1;
-            //Commands.addCommands(command.getSlashData()).queue();
+            Commands.addCommands(command.getSlashData()).queue();
         }
         Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
     }
