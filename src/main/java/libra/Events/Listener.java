@@ -109,6 +109,12 @@ public class Listener extends ListenerAdapter {
                 }
 
                 break;
+
+                case "shutdown":
+                    event.getMessage().reply(config.Emojis.Success+"El bot se ha apagado.").mentionRepliedUser(false).queue();
+                    event.getJDA().shutdown();
+                    System.exit(0);
+                    break;
             default:
         }
     }
