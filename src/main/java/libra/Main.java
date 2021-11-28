@@ -1,8 +1,8 @@
 package libra;
 
 import io.sentry.Sentry;
-import libra.Events.Listener;
 import libra.Config.Config;
+import libra.Events.Listener;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -21,8 +21,12 @@ public class Main {
 
         builder.disableCache(
                 CacheFlag.MEMBER_OVERRIDES,
-                CacheFlag.VOICE_STATE,
-                CacheFlag.ACTIVITY
+                CacheFlag.ACTIVITY,
+                CacheFlag.CLIENT_STATUS,
+                CacheFlag.EMOTE
+        );
+        builder.enableCache(
+                CacheFlag.VOICE_STATE
         );
         builder.setBulkDeleteSplittingEnabled(true);
         builder.setCompression(Compression.NONE);

@@ -2,7 +2,6 @@ package libra.Utils;
 
 import libra.Commands.Bot.*;
 import libra.Commands.Info.*;
-import libra.Commands.Musica.*;
 import libra.Commands.Ocio.*;
 
 import libra.Config.Config;
@@ -25,7 +24,6 @@ public class CommandManager {
     }
 
     public CommandManager() {
-        addCommand(new Play());
         addCommand(new Tirar());
         addCommand(new Soporte());
         addCommand(new Gato());

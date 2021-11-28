@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.awt.*;
-import java.sql.Struct;
 import java.time.Instant;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -65,7 +63,6 @@ public class Listener extends ListenerAdapter {
         CommandListUpdateAction GlobalCommands = event.getJDA().updateCommands();
         GlobalCommands.queue();
 
-
         CommandManager manager = new CommandManager();
         List<Command> commands = manager.getCommands();
 
@@ -73,8 +70,9 @@ public class Listener extends ListenerAdapter {
         int i = 0;
         for(Command command : commands) {
             i = i+1;
-            Commands.addCommands(command.getSlashData()).queue();
+            Commands.addCommands(command.getSlashData());
         }
+        Commands.queue();
         Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
     }
 
