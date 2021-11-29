@@ -42,6 +42,7 @@ public class Listener extends ListenerAdapter {
     WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder(config.LogWebhookURL);
     private final WebhookClient internalLogWebhook = WebhookBuilder.build();
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
