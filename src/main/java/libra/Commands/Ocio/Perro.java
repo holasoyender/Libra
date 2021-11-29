@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+@SuppressWarnings("StringConcatenationInLoop")
 public class Perro implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {

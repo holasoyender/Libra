@@ -166,7 +166,7 @@ public class Listener extends ListenerAdapter {
         String[] Args = Id.split(":");
         if(Args[0].equals("cmd")) {
 
-
+            //noinspection SwitchStatementWithTooFewBranches
             switch (Args[1]) {
 
                 case "help":
