@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
@@ -62,16 +63,21 @@ public class Listener extends ListenerAdapter {
         }
         CommandListUpdateAction Commands = Guild.updateCommands();
 
-        CommandListUpdateAction GlobalCommands = event.getJDA().updateCommands();
-
         CommandManager manager = new CommandManager();
         List<Command> commands = manager.getCommands();
-
 
         int i = 0;
         for(Command command : commands) {
             i = i+1;
-            Commands.addCommands(command.getSlashData());
+
+            if(command.getSlashData() == null) {
+
+                Commands.addCommands(new CommandData(command.getName(), command.getDescription()));
+
+            }else {
+                Commands.addCommands(command.getSlashData());
+            }
+
         }
         Commands.queue();
         Logger.LoadLogger.info("Se han cargado "+i+" comandos.");

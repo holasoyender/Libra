@@ -61,6 +61,6 @@ public class Bot implements Command {
 
     @Override
     public CommandData getSlashData() {
-        return new CommandData(this.getName(), this.getDescription());
+        return null;
     }
 }

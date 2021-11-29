@@ -25,6 +25,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Juntos());
         addCommand(new Recordar());
         addCommand(new Play());
         addCommand(new Tirar());

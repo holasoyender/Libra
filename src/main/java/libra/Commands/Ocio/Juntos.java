@@ -1,36 +1,30 @@
-package libra.Commands.Bot;
+package libra.Commands.Ocio;
 
 import libra.Config.Config;
 import libra.Utils.Command;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.components.Button;
 import org.bson.Document;
 
-public class Soporte implements Command {
-
+public class Juntos implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
-
-        context.reply(config.Emojis.Success+"Puedes acceder a mi servidor de soporte haciendo click en el botón!").mentionRepliedUser(false).addActionRow(
-                Button.link("https://discord.gg/Rwy8J35", "\uD83D\uDD27  Servidor de soporte")
-        ).queue();
-
+        context.reply("En desarrollo").setEphemeral(true).queue();
     }
 
     @Override
     public String getName() {
-        return "soporte";
+        return "juntos";
     }
 
     @Override
     public String getDescription() {
-        return "Invitación al servidor de soporte del bot";
+        return "Lanzar el menú de Discord Together";
     }
 
     @Override
     public String getUsage() {
-        return "soporte";
+        return "juntos";
     }
 
     @Override
@@ -40,7 +34,7 @@ public class Soporte implements Command {
 
     @Override
     public String getCategory() {
-        return "Bot";
+        return "Ocio";
     }
 
     @Override
