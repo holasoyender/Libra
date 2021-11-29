@@ -1,8 +1,8 @@
 package libra.Commands.Bot;
 
+import libra.Config.Config;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
-import libra.Config.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -34,7 +34,7 @@ public class Help implements Command {
                     .setAuthor("Lista de comandos ", null , context.getJDA().getSelfUser().getAvatarUrl())
                     .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                     .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
-                    .setColor(config.EmbedColor)
+                    .setColor(config.getEmbedColor())
                     .setTimestamp(Instant.now())
                     .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 
@@ -55,7 +55,7 @@ public class Help implements Command {
         Command command = manager.getCommand(CommandOption.getAsString());
 
         if (command == null) {
-            context.reply(config.Emojis.Error+"Ese comando no existe!").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"Ese comando no existe!").setEphemeral(true).queue();
             return;
         }
 
@@ -63,7 +63,7 @@ public class Help implements Command {
                 .setAuthor("Comando: " + command.getName(), context.getJDA().getSelfUser().getAvatarUrl())
                 .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                 .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
-                .setColor(config.EmbedColor)
+                .setColor(config.getEmbedColor())
                 .setTimestamp(Instant.now())
                 .setDescription("Para listar todos los comandos puedes usar `/help`\n\n**Nombre del comando:** `"+command.getName()+"`\n**Descripción:** "+command.getDescription()+"\n**Forma de uso:** `/"+command.getUsage()+"`\n**Permisos:** "+command.getPermissions());
 

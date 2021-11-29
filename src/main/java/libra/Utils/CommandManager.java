@@ -18,8 +18,7 @@ import java.util.List;
 public class CommandManager {
 
     private final List<Command> commands = new ArrayList<>();
-    private final Config config = new Config().getConfig();
-
+    private final Config config = new Config();
     public List<Command> getCommands() {
         return commands;
     }

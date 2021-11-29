@@ -16,10 +16,10 @@ public class Bot implements Command {
     public void run(SlashCommandEvent context, Document Guild,  Config config) {
 
         EmbedBuilder Embed = new EmbedBuilder()
-                .setColor(config.EmbedColor)
+                .setColor(config.getEmbedColor())
                 .setAuthor("Información sobre Libra", null, context.getJDA().getSelfUser().getAvatarUrl())
                 .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
-                .addField("Propietario", context.getJDA().retrieveUserById(config.OwnerID).complete().getAsTag(), true)
+                .addField("Propietario", context.getJDA().retrieveUserById(config.getOwnerID()).complete().getAsTag(), true)
                 .addField("Página web", "[Libra](https://libra.kirobot.cc)", true)
                 .addField("Servidor de soporte", "[Soporte](https://discord.gg/Rwy8J35)", true)
                 .addField("Añádeme a tu servidor", "[Añadir](https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands)", true)

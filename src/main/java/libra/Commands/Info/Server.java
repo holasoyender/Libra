@@ -16,7 +16,7 @@ public class Server implements Command {
         if(context.getGuild() == null) return;
 
         EmbedBuilder Embed = new EmbedBuilder()
-                .setColor(config.EmbedColor)
+                .setColor(config.getEmbedColor())
                 .setAuthor(context.getGuild().getName(), null, context.getGuild().getIconUrl())
                 .addField("ID del servidor", String.format("```yaml\nID: %s```",context.getGuild().getId()), false)
                 .setDescription(
@@ -39,26 +39,14 @@ public class Server implements Command {
     private String getLevelName(Guild guild){
         Guild.VerificationLevel level = guild.getVerificationLevel();
 
-        switch(level){
-            case VERY_HIGH:
-                return "Muy alto";
-
-            case HIGH:
-                return "Alto";
-
-            case MEDIUM:
-                return "Medio";
-
-            case LOW:
-                return "Bajo";
-
-            case NONE:
-                return "Ninguno";
-
-            default:
-            case UNKNOWN:
-                return "Desconocido";
-        }
+        return switch (level) {
+            case VERY_HIGH -> "Muy alto";
+            case HIGH -> "Alto";
+            case MEDIUM -> "Medio";
+            case LOW -> "Bajo";
+            case NONE -> "Ninguno";
+            case UNKNOWN -> "Desconocido";
+        };
     }
 
     @Override

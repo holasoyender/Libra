@@ -12,7 +12,7 @@ public class Soporte implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
 
-        context.reply(config.Emojis.Success+"Puedes acceder a mi servidor de soporte haciendo click en el botón!").mentionRepliedUser(false).addActionRow(
+        context.reply(config.getEmojis().Success+"Puedes acceder a mi servidor de soporte haciendo click en el botón!").mentionRepliedUser(false).addActionRow(
                 Button.link("https://discord.gg/Rwy8J35", "\uD83D\uDD27  Servidor de soporte")
         ).queue();
 

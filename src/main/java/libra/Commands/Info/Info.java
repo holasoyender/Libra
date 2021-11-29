@@ -39,7 +39,7 @@ public class Info implements Command {
         if(User.isBot()) AcBadge = "  <:Bot1:913500818345439283><:Bot2:913500818584518706>";
         if(User.getId().equals(context.getGuild().getOwnerId())) AcBadge = "  <:Owner:913501281400815686>";
         EmbedBuilder Embed = new EmbedBuilder()
-                .setColor(config.EmbedColor)
+                .setColor(config.getEmbedColor())
                 .addField(User.getAsTag()+AcBadge , String.format("```yaml\nID: %s```",User.getId()),false)
                 .addField("Badges", this.badges(User), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
@@ -92,50 +92,18 @@ public class Info implements Command {
             if(Badges.length() > 0)
                 Badges.append(" ");
 
-            switch(flag){
-                case STAFF:
-                    Badges.append("<:Staff:913504958912024626>");
-                    break;
-
-                case PARTNER:
-                    Badges.append("<:Partner:913504958362583061>");
-                    break;
-
-                case HYPESQUAD:
-                    Badges.append("<:Hypesquad:913504958727462953>");
-                    break;
-
-                case BUG_HUNTER_LEVEL_1:
-                    Badges.append("<:Bug1:913504958777811045>");
-                    break;
-
-                case HYPESQUAD_BRAVERY:
-                    Badges.append("<:Bravery:913504958400303185>");
-                    break;
-
-                case HYPESQUAD_BRILLIANCE:
-                    Badges.append("<:Brillance:913504958404522066>");
-                    break;
-
-                case HYPESQUAD_BALANCE:
-                    Badges.append("<:Balance:913504958526148629>");
-                    break;
-
-                case EARLY_SUPPORTER:
-                    Badges.append("<:Early:913504958324813846>");
-                    break;
-
-                case BUG_HUNTER_LEVEL_2:
-                    Badges.append("<:Bug2:913504958597443614>");
-                    break;
-
-                case VERIFIED_DEVELOPER:
-                    Badges.append("<:Developer:913504958526148630>");
-                    break;
-
-                case CERTIFIED_MODERATOR:
-                    Badges.append("<:Moderator:913504958643601499>");
-                    break;
+            switch (flag) {
+                case STAFF -> Badges.append("<:Staff:913504958912024626>");
+                case PARTNER -> Badges.append("<:Partner:913504958362583061>");
+                case HYPESQUAD -> Badges.append("<:Hypesquad:913504958727462953>");
+                case BUG_HUNTER_LEVEL_1 -> Badges.append("<:Bug1:913504958777811045>");
+                case HYPESQUAD_BRAVERY -> Badges.append("<:Bravery:913504958400303185>");
+                case HYPESQUAD_BRILLIANCE -> Badges.append("<:Brillance:913504958404522066>");
+                case HYPESQUAD_BALANCE -> Badges.append("<:Balance:913504958526148629>");
+                case EARLY_SUPPORTER -> Badges.append("<:Early:913504958324813846>");
+                case BUG_HUNTER_LEVEL_2 -> Badges.append("<:Bug2:913504958597443614>");
+                case VERIFIED_DEVELOPER -> Badges.append("<:Developer:913504958526148630>");
+                case CERTIFIED_MODERATOR -> Badges.append("<:Moderator:913504958643601499>");
             }
         }
 

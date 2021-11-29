@@ -1,12 +1,8 @@
 package libra.Commands.Music;
 
 import libra.Config.Config;
-import libra.Lavaplayer.Player;
 import libra.Utils.Command;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;

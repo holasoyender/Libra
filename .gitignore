@@ -3,7 +3,7 @@
 .idea
 logs
 app/build
-src/main/java/libra/Config/ConfigB.java
+config.yml
 
 # Ignore Gradle build output directory
 build

@@ -43,7 +43,7 @@ public class Perro implements Command {
             JSONObject data = (JSONObject) parse.parse(inline);
 
             EmbedBuilder Embed = new EmbedBuilder()
-                    .setColor(config.EmbedColor)
+                    .setColor(config.getEmbedColor())
                     .setTitle("Aquí tienes una foto de un perro!")
                     .setImage(data.get("message").toString());
 

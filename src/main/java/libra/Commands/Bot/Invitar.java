@@ -12,7 +12,7 @@ public class Invitar implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
 
-        context.reply(config.Emojis.Success+"Puedes añadirme a tu servidor haciendo click en el botón!").mentionRepliedUser(false).addActionRow(
+        context.reply(config.getEmojis().Success+"Puedes añadirme a tu servidor haciendo click en el botón!").mentionRepliedUser(false).addActionRow(
                 Button.link("https://discord.com/api/oauth2/authorize?client_id=" + context.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands", "\uD83D\uDCCC  Añádeme!")
         ).queue();
 

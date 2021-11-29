@@ -4,10 +4,10 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import libra.Config.Config;
 import libra.Functions.Recordatorios;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
-import libra.Config.Config;
 import libra.Utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -37,9 +37,9 @@ public class Listener extends ListenerAdapter {
 
     private final Logger Logger = new Logger().getLogger();
     private final CommandManager manager = new CommandManager();
-    private final Config config = new Config().getConfig();
+    private final Config config = new Config();
 
-    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder(config.LogWebhookURL);
+    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder(config.getLogWebhookURL());
     private final WebhookClient internalLogWebhook = WebhookBuilder.build();
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -98,45 +98,40 @@ public class Listener extends ListenerAdapter {
             }
         }
         /* ------ Desarrollador ------ */
-        if(!event.getAuthor().getId().equals(config.OwnerID)) return;
+        if(!event.getAuthor().getId().equals(config.getOwnerID())) return;
 
-        String prefix = config.Prefix;
+        String prefix = config.getDefaultPrefix();
         String raw = event.getMessage().getContentRaw();
 
         if(!raw.startsWith(prefix)) return;
         String Command = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split(" ")[0];
         String[] args = raw.replace(prefix+Command+" ", "").split(" ");
+
         switch (Command) {
-
-            case "eval":
-
+            case "eval" -> {
                 String toEval = String.join(" ", args);
-                if(toEval.length() <= 0) return;
-
+                if (toEval.length() <= 0) return;
                 ScriptEngine Script = new ScriptEngineManager().getEngineByName("groovy");
-
                 Script.put("jda", event.getJDA());
                 Script.put("shardManager", event.getJDA().getShardManager());
                 Script.put("guild", event.getGuild());
                 Script.put("channel", event.getChannel());
                 Script.put("msg", event.getMessage());
-
-                try{
+                try {
                     String result = Script.eval(toEval).toString();
                     event.getMessage().reply(String.format("```java\n%s```", result.replaceAll(event.getJDA().getToken(), "T0K3N"))).mentionRepliedUser(false).queue();
-                }catch(ScriptException ex){
+                } catch (ScriptException ex) {
 
                     event.getMessage().reply(String.format("```java\n%s```", ex.getMessage().replaceAll(event.getJDA().getToken(), "T0K3N"))).mentionRepliedUser(false).queue();
                 }
-
-                break;
-
-                case "shutdown":
-                    event.getMessage().reply(config.Emojis.Success+"El bot se ha apagado.").mentionRepliedUser(false).queue();
-                    event.getJDA().shutdown();
-                    System.exit(0);
-                    break;
-            default:
+            }
+            case "shutdown" -> {
+                event.getMessage().reply(config.getEmojis().Success + "El bot se ha apagado.").mentionRepliedUser(false).queue();
+                event.getJDA().shutdown();
+                System.exit(0);
+            }
+            default -> {
+            }
         }
     }
 
@@ -169,30 +164,21 @@ public class Listener extends ListenerAdapter {
 
             //noinspection SwitchStatementWithTooFewBranches
             switch (Args[1]) {
-
-                case "help":
-
-                    if(!event.getUser().getId().equals(Args[3])) {
-                        event.reply(config.Emojis.Error+"No puedes usar este menú!").setEphemeral(true).queue();
+                case "help" -> {
+                    if (!event.getUser().getId().equals(Args[3])) {
+                        event.reply(config.getEmojis().Error + "No puedes usar este menú!").setEphemeral(true).queue();
                         return;
                     }
-
-                        EmbedBuilder Embed = new EmbedBuilder()
-                                .setAuthor("Sección de " + Args[2], null, event.getJDA().getSelfUser().getAvatarUrl())
-                                .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
-                                .setColor(config.EmbedColor)
-                                .setTimestamp(Instant.now())
-                                .setDescription("Usa `help <Comando>` para más información sobre un comando específico");
-
-                        manager.getCommandsByCategory(Args[2]).forEach((cmd) -> Embed.addField("`" + cmd.getName() + "`", cmd.getDescription(), true));
-                        event.editMessageEmbeds(Embed.build()).queue();
-
-
-                    break;
-
-                default:
-                    event.reply(config.Emojis.Error+"Interacción desconocida!").setEphemeral(true).queue();
-                    break;
+                    EmbedBuilder Embed = new EmbedBuilder()
+                            .setAuthor("Sección de " + Args[2], null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
+                            .setColor(config.getEmbedColor())
+                            .setTimestamp(Instant.now())
+                            .setDescription("Usa `help <Comando>` para más información sobre un comando específico");
+                    manager.getCommandsByCategory(Args[2]).forEach((cmd) -> Embed.addField("`" + cmd.getName() + "`", cmd.getDescription(), true));
+                    event.editMessageEmbeds(Embed.build()).queue();
+                }
+                default -> event.reply(config.getEmojis().Error + "Interacción desconocida!").setEphemeral(true).queue();
             }
         }
     }
@@ -212,7 +198,7 @@ public class Listener extends ListenerAdapter {
                     if(Args[2].equals("Main")) {
 
                         if(!event.getUser().getId().equals(Args[3])) {
-                            event.reply(config.Emojis.Error+"No puedes usar este botón!").setEphemeral(true).queue();
+                            event.reply(config.getEmojis().Error+"No puedes usar este botón!").setEphemeral(true).queue();
                             return;
                         }
 
@@ -220,7 +206,7 @@ public class Listener extends ListenerAdapter {
                                 .setAuthor("Lista de comandos ", null , event.getJDA().getSelfUser().getAvatarUrl())
                                 .setFooter("> " + event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                                 .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
-                                .setColor(config.EmbedColor)
+                                .setColor(config.getEmbedColor())
                                 .setTimestamp(Instant.now())
                                 .setDescription("**Hola** :wave:, soy `Libra`. Un bot multifunción completamente en español para **Discord**\n**Navega por el menú para ver los comandos en función de su categoría!**\n\n **[Invitame!](https://discord.com/api/oauth2/authorize?client_id=" + event.getJDA().getSelfUser().getId() + "&permissions=8&scope=bot%20applications.commands)** - **[Servidor de Soporte](https://discord.gg/Rwy8J35)**");
 

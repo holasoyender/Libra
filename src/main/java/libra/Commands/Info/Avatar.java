@@ -17,13 +17,13 @@ public class Avatar implements Command {
         if(User == null) {
             String URL = context.getUser().getAvatarUrl()+ "?size=512";
             if(context.getUser().getAvatarUrl() == null) URL = "https://cdn.discordapp.com/embed/avatars/0.png";
-            EmbedBuilder Embed = new EmbedBuilder().setImage(URL).setColor(config.EmbedColor);
-            context.reply(config.Emojis.Success+"Aquí tienes tu avatar "+context.getUser().getAsMention()).addEmbeds(Embed.build()).queue();
+            EmbedBuilder Embed = new EmbedBuilder().setImage(URL).setColor(config.getEmbedColor());
+            context.reply(config.getEmojis().Success+"Aquí tienes tu avatar "+context.getUser().getAsMention()).addEmbeds(Embed.build()).queue();
         }else {
             String URL = User.getAsUser().getAvatarUrl()+ "?size=512";
             if(User.getAsUser().getAvatarUrl() == null) URL = "https://cdn.discordapp.com/embed/avatars/0.png";
-            EmbedBuilder Embed = new EmbedBuilder().setImage(URL).setColor(config.EmbedColor);
-            context.reply(config.Emojis.Success+"Aquí tienes el avatar de **"+User.getAsUser().getAsTag()+"**").addEmbeds(Embed.build()).queue();
+            EmbedBuilder Embed = new EmbedBuilder().setImage(URL).setColor(config.getEmbedColor());
+            context.reply(config.getEmojis().Success+"Aquí tienes el avatar de **"+User.getAsUser().getAsTag()+"**").addEmbeds(Embed.build()).queue();
         }
     }
 

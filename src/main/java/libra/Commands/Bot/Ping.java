@@ -9,12 +9,10 @@ import org.bson.Document;
 
 public class Ping implements Command {
 
-    private final Config config = new Config().getConfig();
-
     @Override
     public void run(SlashCommandEvent context, Document Guild,  Config config) {
         JDA jda = context.getJDA();
-        context.replyFormat(config.Emojis.Ping+"Mi ping es de `%sms`", jda.getGatewayPing()).queue();
+        context.replyFormat(config.getEmojis().Ping+"Mi ping es de `%sms`", jda.getGatewayPing()).queue();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Gato implements Command {
             JSONObject data = (JSONObject) rawData.get(0);
 
             EmbedBuilder Embed = new EmbedBuilder()
-                    .setColor(config.EmbedColor)
+                    .setColor(config.getEmbedColor())
                     .setTitle("Aquí tienes una foto de un gato!")
                     .setImage(data.get("url").toString());
 

@@ -17,21 +17,21 @@ public class Say implements Command {
         OptionMapping SayRaw = context.getOption("texto");
 
         if (SayRaw == null) {
-            context.reply("No puedes hacer que diga un mensaje vacío!").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"No puedes hacer que diga un mensaje vacío!").setEphemeral(true).queue();
             return;
         }
         String Say = SayRaw.getAsString();
 
         if (Say.length() <= 0) {
-            context.reply("No puedes hacer que diga un mensaje vacío!").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"No puedes hacer que diga un mensaje vacío!").setEphemeral(true).queue();
             return;
         }
 
         try {
             context.getChannel().sendMessage(Say).queue();
-            context.reply(config.Emojis.Success+"He dicho `"+Say+"`").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Success+"He dicho `"+Say+"`").setEphemeral(true).queue();
         } catch (Exception e) {
-            context.reply("Ha ocurrido un error al intentar mandar ese mensaje!").queue();
+            context.reply(config.getEmojis().Error+"Ha ocurrido un error al intentar mandar ese mensaje!").queue();
         }
 
     }

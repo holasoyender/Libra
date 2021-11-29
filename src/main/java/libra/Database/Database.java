@@ -10,10 +10,10 @@ import org.bson.Document;
 
 public class Database {
 
-    private static final Config config = new Config().getConfig();
+    private static final Config config = new Config();
 
 
-    private static final MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(config.MongoUrl)).build();
+    private static final MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(config.getMongoUrl())).build();
     private static final MongoClient mongoClient = MongoClients.create(settings);
 
 
@@ -36,7 +36,7 @@ public class Database {
 
         if (Guild != null) return;
 
-        Document newDocument = new Document("guildID", guildID).append("prefix", config.Prefix);
+        Document newDocument = new Document("guildID", guildID).append("prefix", config.getDefaultPrefix());
         Guilds.insertOne(newDocument);
 
     }

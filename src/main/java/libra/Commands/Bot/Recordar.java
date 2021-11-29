@@ -19,18 +19,18 @@ public class Recordar implements Command {
         OptionMapping recRaw = context.getOption("recordatorio");
 
         if(timeRaw == null) {
-            context.reply(config.Emojis.Error+"Tienes que especificar un tiempo").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"Tienes que especificar un tiempo").setEphemeral(true).queue();
             return;
         }
         if(recRaw == null) {
-            context.reply(config.Emojis.Error+"Tienes que especificar un recordatorio").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"Tienes que especificar un recordatorio").setEphemeral(true).queue();
             return;
         }
         long time = Time.ms(timeRaw.getAsString());
         String rec = recRaw.getAsString();
 
         if(time == 0) {
-            context.reply(config.Emojis.Error+"Ese tiempo es invalido").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"Ese tiempo es invalido").setEphemeral(true).queue();
             return;
         }
 
@@ -44,10 +44,10 @@ public class Recordar implements Command {
 
         try {
             Database.getDatabase().getCollection("Recordatorios").insertOne(doc);
-            context.reply(config.Emojis.Success+"Recordatorio guardado para dentro de **"+timeRaw.getAsString()+"**:```\n"+rec+"```").setEphemeral(false).queue();
+            context.reply(config.getEmojis().Success+"Recordatorio guardado para dentro de **"+timeRaw.getAsString()+"**:```\n"+rec+"```").setEphemeral(false).queue();
         } catch (Exception e) {
             e.printStackTrace();
-            context.reply(config.Emojis.Error+"No se pudo guardar el recordatorio").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error+"No se pudo guardar el recordatorio").setEphemeral(true).queue();
         }
 
     }

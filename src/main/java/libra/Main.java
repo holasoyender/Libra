@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) {
 
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(null);
-        Config config = new Config().getConfig();
+        Config Config = new Config();
 
         builder.disableCache(
                 CacheFlag.MEMBER_OVERRIDES,
@@ -32,7 +32,7 @@ public class Main {
         builder.setCompression(Compression.NONE);
         builder.setActivity(Activity.watching("the world"));
 
-        builder.setToken(config.Token);
+        builder.setToken(Config.getToken());
         builder.addEventListeners(new Listener());
 
         builder.setMemberCachePolicy(MemberCachePolicy.VOICE.or(MemberCachePolicy.OWNER));
@@ -57,7 +57,7 @@ public class Main {
         try {
             builder.build();
             Sentry.init(options -> {
-                options.setDsn(config.SentryDNS);
+                options.setDsn(Config.getSentry());
                 options.setTracesSampleRate(1.0);
                 options.setDebug(false);
             });
