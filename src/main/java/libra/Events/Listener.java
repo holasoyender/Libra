@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import libra.Functions.Recordatorios;
 import libra.Utils.Command;
 import libra.Utils.CommandManager;
 import libra.Config.Config;
@@ -44,6 +45,8 @@ public class Listener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
 
+        Recordatorios.start(event.getJDA());
+
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0xD6D150)
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha iniciado", event.getJDA().getSelfUser().getAvatarUrl(), null))
@@ -58,10 +61,8 @@ public class Listener extends ListenerAdapter {
             return;
         }
         CommandListUpdateAction Commands = Guild.updateCommands();
-        Commands.queue();
 
         CommandListUpdateAction GlobalCommands = event.getJDA().updateCommands();
-        GlobalCommands.queue();
 
         CommandManager manager = new CommandManager();
         List<Command> commands = manager.getCommands();

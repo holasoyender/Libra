@@ -40,4 +40,9 @@ public class Database {
         Guilds.insertOne(newDocument);
 
     }
+
+    public static MongoDatabase getDatabase() {
+        return mongoClient.getDatabase("Libra");
+    }
+
 }
