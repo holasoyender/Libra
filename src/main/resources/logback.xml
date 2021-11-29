@@ -19,7 +19,7 @@
             <pattern>%d{dd.MM.yyyy HH:mm:ss} [%thread] [ %-5level] [%logger{0}] %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${DEV_HOME}/archived/libra-%d{dd.MM.yyyy}.%i.log</fileNamePattern>
+            <fileNamePattern>./logs/archived/libra-%d{dd.MM.yyyy}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <maxHistory>60</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
