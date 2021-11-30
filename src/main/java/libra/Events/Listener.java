@@ -50,9 +50,8 @@ public class Listener extends ListenerAdapter {
         Recordatorios.start(event.getJDA());
 
         WebhookEmbed Embed = new WebhookEmbedBuilder()
-                .setColor(0xD6D150)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha iniciado", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .setDescription("Shard: "+event.getJDA().getShardInfo().getShardId())
+                .setColor(0x5b6cec)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" iniciada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
         internalLogWebhook.send(Embed);
@@ -232,9 +231,8 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onReconnected(@NotNull ReconnectedEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
-                .setColor(0x11F78A)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha reconectado", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .setDescription("Shard: "+event.getJDA().getShardInfo().getShardId())
+                .setColor(0x68c14e)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" conectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
         internalLogWebhook.send(Embed);
@@ -243,9 +241,8 @@ public class Listener extends ListenerAdapter {
     @Override
     public void onDisconnect(@NotNull DisconnectEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
-                .setColor(0xEA4F4C)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha desconectado", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .setDescription("Shard: "+event.getJDA().getShardInfo().getShardId())
+                .setColor(0xffce00)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" desconectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
         internalLogWebhook.send(Embed);
@@ -255,8 +252,7 @@ public class Listener extends ListenerAdapter {
     public void onResumed(@NotNull ResumedEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x596ED6)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha resumido", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .setDescription("Shard: "+event.getJDA().getShardInfo().getShardId())
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" resumida", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
         internalLogWebhook.send(Embed);

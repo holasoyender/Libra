@@ -12,7 +12,6 @@ public class Database {
 
     private static final Config config = new Config();
 
-
     private static final MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(new ConnectionString(config.getMongoUrl())).build();
     private static final MongoClient mongoClient = MongoClients.create(settings);
 
