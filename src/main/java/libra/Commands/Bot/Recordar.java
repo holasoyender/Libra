@@ -2,7 +2,7 @@ package libra.Commands.Bot;
 
 import libra.Config.Config;
 import libra.Database.Database;
-import libra.Utils.Command;
+import libra.Utils.Command.Command;
 import libra.Utils.Time;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;

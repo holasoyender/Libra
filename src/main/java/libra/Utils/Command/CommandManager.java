@@ -1,4 +1,4 @@
-package libra.Utils;
+package libra.Utils.Command;
 
 import libra.Commands.Bot.*;
 import libra.Commands.Info.*;
@@ -7,6 +7,7 @@ import libra.Commands.Ocio.*;
 
 import libra.Config.Config;
 import libra.Database.Database;
+import libra.Utils.Command.Command;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.bson.Document;
 

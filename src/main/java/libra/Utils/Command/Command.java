@@ -1,4 +1,4 @@
-package libra.Utils;
+package libra.Utils.Command;
 
 import libra.Config.Config;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;

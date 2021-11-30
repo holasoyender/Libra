@@ -1,8 +1,8 @@
 package libra.Commands.Bot;
 
 import libra.Config.Config;
-import libra.Utils.Command;
-import libra.Utils.CommandManager;
+import libra.Utils.Command.Command;
+import libra.Utils.Command.CommandManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;

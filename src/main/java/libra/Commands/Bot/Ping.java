@@ -1,7 +1,7 @@
 package libra.Commands.Bot;
 
 import libra.Config.Config;
-import libra.Utils.Command;
+import libra.Utils.Command.Command;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
