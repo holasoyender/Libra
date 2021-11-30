@@ -19,9 +19,8 @@ public class Config {
 
         if (!(file.exists())) {
             try {
-                //Cuando se compila a un JAR, el archivo de ejemplo no existe (hacerlo remoto/string)
-                Files.copy(new File("src/main/resources/config.example.yml").toPath(), file.toPath());
-                System.out.println("No se ha encontrado el archivo de configuración, por favor, rellena config.yml y ejecuta este programa de nuevo.");
+                Files.writeString(file.toPath(), "BotToken: \"\"\nSentryDNS: \"\"\nMongoURL: \"\"\n\nOwnerID: \"\"\nDefaultPrefix: \"\"\n\nEmbedColor: \"\"\nLogWebhookURL: \"\"\n");
+                System.out.println("No se ha encontrado el archivo de config, por favor, rellena config.yml y ejecuta este programa de nuevo.");
                 System.exit(0);
             } catch (IOException e) {
                 throw new RuntimeException(e);
