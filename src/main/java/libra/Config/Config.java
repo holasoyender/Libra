@@ -50,6 +50,7 @@ public class Config {
     }
 
     public String getDefaultPrefix() {
+        if(config.get("DefaultPrefix") == null || config.get("DefaultPrefix") == "") return "-";
         return config.get("DefaultPrefix").toString();
     }
 
@@ -58,8 +59,14 @@ public class Config {
     }
 
     public Color getEmbedColor() {
+        if(config.get("EmbedColor") == null || config.get("EmbedColor") == "") return Color.decode("#5b6cec");
         return Color.decode(config.get("EmbedColor").toString());
     }
 
     public String getMongoUrl() { return config.get("MongoURL").toString(); }
+
+    public String getStatus() {
+        if (config.get("Estado") == null || config.get("Estado") == "") return "el mundo";
+        return config.get("Estado").toString();
+    }
 }

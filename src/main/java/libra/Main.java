@@ -30,7 +30,7 @@ public class Main {
         );
         builder.setBulkDeleteSplittingEnabled(true);
         builder.setCompression(Compression.NONE);
-        builder.setActivity(Activity.watching("the world"));
+        builder.setActivity(Activity.watching(Config.getStatus()));
 
         builder.setToken(Config.getToken());
         builder.addEventListeners(new Listener());
@@ -56,11 +56,13 @@ public class Main {
 
         try {
             builder.build();
-            Sentry.init(options -> {
-                options.setDsn(Config.getSentry());
-                options.setTracesSampleRate(1.0);
-                options.setDebug(false);
-            });
+            if(Config.getSentry() != null) {
+                Sentry.init(options -> {
+                    options.setDsn(Config.getSentry());
+                    options.setTracesSampleRate(1.0);
+                    options.setDebug(false);
+                });
+            }
         } catch (LoginException e) {
             e.printStackTrace();
         }

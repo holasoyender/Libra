@@ -39,8 +39,7 @@ public class Listener extends ListenerAdapter {
     private final CommandManager manager = new CommandManager();
     private final Config config = new Config();
 
-    WebhookClientBuilder WebhookBuilder = new WebhookClientBuilder(config.getLogWebhookURL());
-    private final WebhookClient internalLogWebhook = WebhookBuilder.build();
+    private WebhookClient internalLogWebhook = null;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
@@ -48,13 +47,6 @@ public class Listener extends ListenerAdapter {
         Logger.EventLogger.info("Cliente iniciado como {}", event.getJDA().getSelfUser().getAsTag());
 
         Recordatorios.start(event.getJDA());
-
-        WebhookEmbed Embed = new WebhookEmbedBuilder()
-                .setColor(0x5b6cec)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" iniciada", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .build();
-
-        internalLogWebhook.send(Embed);
 
         Guild Guild = event.getJDA().getGuildById("903340301442252821");
         if(Guild == null) {
@@ -81,6 +73,23 @@ public class Listener extends ListenerAdapter {
         }
         Commands.queue();
         Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
+
+        if(config.getLogWebhookURL() != null) {
+            try {
+                WebhookClientBuilder webhookBuilder = new WebhookClientBuilder(config.getLogWebhookURL());
+                internalLogWebhook = webhookBuilder.build();
+            }catch (Exception e) {
+                Logger.EventLogger.error("No se pudo iniciar el webhook logs interno.");
+            }
+        }
+
+        WebhookEmbed Embed = new WebhookEmbedBuilder()
+                .setColor(0x5b6cec)
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" iniciada", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .build();
+
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -235,7 +244,8 @@ public class Listener extends ListenerAdapter {
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" conectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -245,7 +255,8 @@ public class Listener extends ListenerAdapter {
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" desconectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -255,7 +266,8 @@ public class Listener extends ListenerAdapter {
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" resumida", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -265,7 +277,8 @@ public class Listener extends ListenerAdapter {
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha apagado", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -277,7 +290,8 @@ public class Listener extends ListenerAdapter {
                 .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 
     @Override
@@ -289,6 +303,7 @@ public class Listener extends ListenerAdapter {
                 .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
                 .build();
 
-        internalLogWebhook.send(Embed);
+        if(internalLogWebhook != null)
+            internalLogWebhook.send(Embed);
     }
 }

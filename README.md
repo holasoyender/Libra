@@ -26,8 +26,12 @@ Después de esto se generará un archivo de configuración llamado `config.yml` 
  BotToken: El token de tu bot de Discord  -  (Obligatorio)
  SentryDNS: La DNS de Sentry.io  -  (Opcional)
  MongoURL: La URL de tu base de datos de MongoDB  -  (Obligatorio)
+ 
  OwnerID: Tu ID de usuario de Discord  -  (Obligatorio)
- DefaultPrefix: El prefijo por defecto de Libra  -  (Obligatorio)
- EmbedColor: El color que tendrán los embeds del bot  -  (Obligatorio)
+ DefaultPrefix: El prefijo por defecto de Libra  -  (Opcional, por defecto -)
+ 
+ EmbedColor: El color que tendrán los embeds del bot  -  (Opcional, por defecto: #5b6cec)
  LogWebhookURL: La URL del Webhook donde se enviarán los logs de Libra  -  (Opcional)
+ 
+ Esado: El estado que tendrá el bot  -  (Opcional, por defecto "el mundo")
  ```
