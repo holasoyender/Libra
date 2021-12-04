@@ -5,6 +5,7 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import libra.Config.Config;
+import libra.Database.Database;
 import libra.Functions.DiscordTogether;
 import libra.Functions.Recordatorios;
 import libra.Utils.Command.Command;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -50,7 +53,7 @@ public class Listener extends ListenerAdapter {
         Recordatorios.start(event.getJDA());
 
         Guild Guild = event.getJDA().getGuildById("704029755975925841");
-        if(Guild == null) {
+        if (Guild == null) {
             System.out.println("No existe el servidor de tests");
             return;
         }
@@ -60,44 +63,44 @@ public class Listener extends ListenerAdapter {
         List<Command> commands = manager.getCommands();
 
         int i = 0;
-        for(Command command : commands) {
-            i = i+1;
+        for (Command command : commands) {
+            i = i + 1;
 
-            if(command.getSlashData() == null) {
+            if (command.getSlashData() == null) {
 
                 Commands.addCommands(new CommandData(command.getName(), command.getDescription()));
 
-            }else {
+            } else {
                 Commands.addCommands(command.getSlashData());
             }
 
         }
         Commands.queue();
-        Logger.LoadLogger.info("Se han cargado "+i+" comandos.");
+        Logger.LoadLogger.info("Se han cargado " + i + " comandos.");
 
-        if(config.getLogWebhookURL() != null) {
+        if (config.getLogWebhookURL() != null) {
             try {
                 WebhookClientBuilder webhookBuilder = new WebhookClientBuilder(config.getLogWebhookURL());
                 internalLogWebhook = webhookBuilder.build();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Logger.EventLogger.error("No se pudo iniciar el webhook logs interno.");
             }
         }
 
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x5b6cec)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" iniciada", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard " + event.getJDA().getShardInfo().getShardId() + " iniciada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
-        if(event.getAuthor().isBot()) return;
-        if(event.getMessage().getMentionedMembers().size() > 0) {
+        if (event.getAuthor().isBot()) return;
+        if (event.getMessage().getMentionedMembers().size() > 0) {
             if (event.getMessage().getMentionedMembers().get(0).getId().equals(event.getJDA().getSelfUser().getId())) {
                 event.getChannel().sendMessage("**Hola :wave:**\nSoy `Libra`, un bot para Discord completamente en **Español** de código abierto.\nAquí te dejo unos botones para obtener más información").setActionRow(
                         Button.primary("cmd:bot:Main:" + event.getAuthor().getId(), "Lista de comandos"),
@@ -107,14 +110,14 @@ public class Listener extends ListenerAdapter {
             }
         }
         /* ------ Desarrollador ------ */
-        if(!event.getAuthor().getId().equals(config.getOwnerID())) return;
+        if (!event.getAuthor().getId().equals(config.getOwnerID())) return;
 
         String prefix = config.getDefaultPrefix();
         String raw = event.getMessage().getContentRaw();
 
-        if(!raw.startsWith(prefix)) return;
-        String Command = event.getMessage().getContentRaw().replaceFirst("(?i)"+ Pattern.quote(prefix), "").split(" ")[0];
-        String[] args = raw.replace(prefix+Command+" ", "").split(" ");
+        if (!raw.startsWith(prefix)) return;
+        String Command = event.getMessage().getContentRaw().replaceFirst("(?i)" + Pattern.quote(prefix), "").split(" ")[0];
+        String[] args = raw.replace(prefix + Command + " ", "").split(" ");
 
         switch (Command) {
             case "eval" -> {
@@ -146,7 +149,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
-        if(event.getAuthor().isBot()) return;
+        if (event.getAuthor().isBot()) return;
 
         event.getChannel().sendMessage("**Hola :wave:**\nSoy `Libra`, un bot para Discord completamente en **Español** de código abierto.\nAquí te dejo unos botones para obtener más información").setActionRow(
                 Button.primary("cmd:bot:Main:" + event.getAuthor().getId(), "Lista de comandos"),
@@ -160,7 +163,7 @@ public class Listener extends ListenerAdapter {
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
         User user = event.getUser();
 
-        if(user.isBot() || event.getGuild() == null) return;
+        if (user.isBot() || event.getGuild() == null) return;
 
         manager.run(event);
     }
@@ -169,7 +172,7 @@ public class Listener extends ListenerAdapter {
     public void onSelectionMenu(@NotNull SelectionMenuEvent event) {
         String Id = event.getValues().get(0);
         String[] Args = Id.split(":");
-        if(Args[0].equals("cmd")) {
+        if (Args[0].equals("cmd")) {
 
             switch (Args[1]) {
                 case "help" -> {
@@ -187,8 +190,8 @@ public class Listener extends ListenerAdapter {
                     event.editMessageEmbeds(Embed.build()).queue();
                 }
                 case "together" -> {
-                    if(!event.getUser().getId().equals(Args[3])) {
-                        event.reply(config.getEmojis().Error+"  No puedes usar este menú").setEphemeral(true).queue();
+                    if (!event.getUser().getId().equals(Args[3])) {
+                        event.reply(config.getEmojis().Error + "  No puedes usar este menú").setEphemeral(true).queue();
                     }
                     DiscordTogether.handleDiscordTogether(event, Args[2]);
                 }
@@ -202,22 +205,22 @@ public class Listener extends ListenerAdapter {
         String Id = event.getComponentId();
         String[] Args = Id.split(":");
 
-        if(Args[0].equals("cmd")) {
+        if (Args[0].equals("cmd")) {
 
             switch (Args[1]) {
 
                 case "help":
                 case "bot":
 
-                    if(Args[2].equals("Main")) {
+                    if (Args[2].equals("Main")) {
 
-                        if(!event.getUser().getId().equals(Args[3])) {
-                            event.reply(config.getEmojis().Error+"No puedes usar este botón!").setEphemeral(true).queue();
+                        if (!event.getUser().getId().equals(Args[3])) {
+                            event.reply(config.getEmojis().Error + "No puedes usar este botón!").setEphemeral(true).queue();
                             return;
                         }
 
                         EmbedBuilder Embed = new EmbedBuilder()
-                                .setAuthor("Lista de comandos ", null , event.getJDA().getSelfUser().getAvatarUrl())
+                                .setAuthor("Lista de comandos ", null, event.getJDA().getSelfUser().getAvatarUrl())
                                 .setFooter("> " + event.getUser().getAsTag(), event.getUser().getAvatarUrl())
                                 .setThumbnail(event.getJDA().getSelfUser().getAvatarUrl())
                                 .setColor(config.getEmbedColor())
@@ -227,10 +230,10 @@ public class Listener extends ListenerAdapter {
                         event.editMessageEmbeds(Embed.build()).setContent("").setActionRow(
                                 SelectionMenu.create("cmd:help")
                                         .setPlaceholder("Elija la categoría")
-                                        .addOption("Información", "cmd:help:Información:"+event.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
-                                        .addOption("Bot", "cmd:help:Bot:"+event.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
-                                        .addOption("Música", "cmd:help:Música:"+event.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
-                                        .addOption("Ocio", "cmd:help:Ocio:"+event.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
+                                        .addOption("Información", "cmd:help:Información:" + event.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
+                                        .addOption("Bot", "cmd:help:Bot:" + event.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
+                                        .addOption("Música", "cmd:help:Música:" + event.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
+                                        .addOption("Ocio", "cmd:help:Ocio:" + event.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
                                         .build()
                         ).queue();
 
@@ -247,10 +250,10 @@ public class Listener extends ListenerAdapter {
     public void onReconnected(@NotNull ReconnectedEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x68c14e)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" conectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard " + event.getJDA().getShardInfo().getShardId() + " conectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
@@ -258,10 +261,10 @@ public class Listener extends ListenerAdapter {
     public void onDisconnect(@NotNull DisconnectEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0xffce00)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" desconectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard " + event.getJDA().getShardInfo().getShardId() + " desconectada", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
@@ -269,10 +272,10 @@ public class Listener extends ListenerAdapter {
     public void onResumed(@NotNull ResumedEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x596ED6)
-                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard "+event.getJDA().getShardInfo().getShardId()+" resumida", event.getJDA().getSelfUser().getAvatarUrl(), null))
+                .setAuthor(new WebhookEmbed.EmbedAuthor("Shard " + event.getJDA().getShardInfo().getShardId() + " resumida", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
@@ -283,7 +286,7 @@ public class Listener extends ListenerAdapter {
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Libra se ha apagado", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
@@ -292,11 +295,11 @@ public class Listener extends ListenerAdapter {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x5CD6FA)
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Me han metido en un nuevo servidor servidor", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", ""+event.getGuild().getMemberCount()))
-                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
+                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", "" + event.getGuild().getMemberCount()))
+                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!" + event.getGuild().getOwnerId() + "> (" + event.getGuild().getOwnerId() + ")"))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
 
@@ -305,11 +308,31 @@ public class Listener extends ListenerAdapter {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0xEB4E4B)
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Me han sacado de un servidor", event.getJDA().getSelfUser().getAvatarUrl(), null))
-                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", ""+event.getGuild().getMemberCount()))
-                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!"+event.getGuild().getOwnerId()+"> ("+event.getGuild().getOwnerId()+")"))
+                .addField(new WebhookEmbed.EmbedField(true, "Cantidad de miembros", "" + event.getGuild().getMemberCount()))
+                .addField(new WebhookEmbed.EmbedField(true, "Propietario", "<@!" + event.getGuild().getOwnerId() + "> (" + event.getGuild().getOwnerId() + ")"))
                 .build();
 
-        if(internalLogWebhook != null)
+        if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
     }
+
+    @Override
+    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+
+        String LogChannelID = Database.getLogChannelIDByGuildID(event.getGuild().getId());
+        if (LogChannelID == null) return;
+
+        TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
+        if (LogChannel == null) return;
+
+        EmbedBuilder Embed = new EmbedBuilder()
+                .setColor(Color.decode("#2BFB8D"))
+                .setAuthor("Un usuario se ha unido al servidor", null,  event.getJDA().getSelfUser().getAvatarUrl())
+                .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                .addField(event.getMember().getUser().getAsTag(), String.format("```yaml\nID: %s```", event.getMember().getUser().getId()), false);
+
+        LogChannel.sendMessageEmbeds(Embed.build()).queue();
+
+    }
+
 }

@@ -6,6 +6,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import libra.Config.Config;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import org.bson.Document;
 
 public class Database {
@@ -43,4 +44,10 @@ public class Database {
         return mongoClient.getDatabase("Libra");
     }
 
+    public static String getLogChannelIDByGuildID(String GuildID) {
+
+        Document Logs = (Document) Database.getGuildDocument(GuildID).get("Logs");
+        return Logs.get("ChannelID").toString();
+
+    }
 }
