@@ -46,6 +46,7 @@ public class Help implements Command {
                             .addOption("Bot", "cmd:help:Bot:"+context.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
                             .addOption("Música", "cmd:help:Música:"+context.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
                             .addOption("Ocio", "cmd:help:Ocio:"+context.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
+                            .addOption("Configuración", "cmd:help:Configuración:"+context.getUser().getId(), "Lista de comandos de la sección de Configuración", Emoji.fromUnicode("⚙️"))
                             .build()
             ).queue();
 

@@ -49,7 +49,7 @@ public class Listener extends ListenerAdapter {
 
         Recordatorios.start(event.getJDA());
 
-        Guild Guild = event.getJDA().getGuildById("903340301442252821");
+        Guild Guild = event.getJDA().getGuildById("704029755975925841");
         if(Guild == null) {
             System.out.println("No existe el servidor de tests");
             return;

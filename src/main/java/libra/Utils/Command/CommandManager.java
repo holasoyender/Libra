@@ -1,13 +1,13 @@
 package libra.Utils.Command;
 
 import libra.Commands.Bot.*;
+import libra.Commands.Config.SetLogs;
 import libra.Commands.Info.*;
 import libra.Commands.Music.Play;
 import libra.Commands.Ocio.*;
 
 import libra.Config.Config;
 import libra.Database.Database;
-import libra.Utils.Command.Command;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.bson.Document;
 
@@ -25,6 +25,8 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new GitHub());
+        addCommand(new SetLogs());
         addCommand(new Juntos());
         addCommand(new Recordar());
         addCommand(new Play());

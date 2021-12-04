@@ -22,8 +22,7 @@ public class Database {
         MongoCollection<Document> Guilds = Database.getCollection("Guilds");
 
 
-        return Guilds.find(new Document("guildID", guildID)).first();
-
+        return Guilds.find(new Document("GuildID", guildID)).first();
     }
 
     public static void createGuildDocument(String guildID) {
@@ -35,7 +34,7 @@ public class Database {
 
         if (Guild != null) return;
 
-        Document newDocument = new Document("guildID", guildID).append("prefix", config.getDefaultPrefix());
+        Document newDocument = new Document("GuildID", guildID).append("Logs", new Document("Enabled", false).append("ChannelID", ""));
         Guilds.insertOne(newDocument);
 
     }
