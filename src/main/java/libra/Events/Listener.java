@@ -5,6 +5,7 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import libra.Config.Config;
+import libra.Functions.DiscordTogether;
 import libra.Functions.Recordatorios;
 import libra.Utils.Command.Command;
 import libra.Utils.Command.CommandManager;
@@ -170,7 +171,6 @@ public class Listener extends ListenerAdapter {
         String[] Args = Id.split(":");
         if(Args[0].equals("cmd")) {
 
-            //noinspection SwitchStatementWithTooFewBranches
             switch (Args[1]) {
                 case "help" -> {
                     if (!event.getUser().getId().equals(Args[3])) {
@@ -185,6 +185,12 @@ public class Listener extends ListenerAdapter {
                             .setDescription("Usa `help <Comando>` para más información sobre un comando específico");
                     manager.getCommandsByCategory(Args[2]).forEach((cmd) -> Embed.addField("`" + cmd.getName() + "`", cmd.getDescription(), true));
                     event.editMessageEmbeds(Embed.build()).queue();
+                }
+                case "together" -> {
+                    if(!event.getUser().getId().equals(Args[3])) {
+                        event.reply(config.getEmojis().Error+"  No puedes usar este menú").setEphemeral(true).queue();
+                    }
+                    DiscordTogether.handleDiscordTogether(event, Args[2]);
                 }
                 default -> event.reply(config.getEmojis().Error + "Interacción desconocida!").setEphemeral(true).queue();
             }
