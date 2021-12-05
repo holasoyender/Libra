@@ -8,6 +8,8 @@ import libra.Commands.Ocio.*;
 
 import libra.Config.Config;
 import libra.Database.Database;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.bson.Document;
 
@@ -20,6 +22,7 @@ public class CommandManager {
 
     private final List<Command> commands = new ArrayList<>();
     private final Config config = new Config();
+
     public List<Command> getCommands() {
         return commands;
     }
@@ -47,7 +50,7 @@ public class CommandManager {
     public void addCommand(Command cmd) {
         boolean nameFound = this.commands.stream().anyMatch((it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
-        if(nameFound) {
+        if (nameFound) {
             throw new IllegalArgumentException("Ya existe un comando con ese nombre!");
         }
 
@@ -59,7 +62,7 @@ public class CommandManager {
         String searchLower = search.toLowerCase();
 
         for (Command command : this.commands) {
-            if(command.getName().equals(searchLower)){
+            if (command.getName().equals(searchLower)) {
                 return command;
             }
         }
@@ -71,7 +74,7 @@ public class CommandManager {
         List<Command> Commands = new ArrayList<>(Collections.emptyList());
 
         this.commands.forEach((cmd) -> {
-            if(cmd.getCategory().equals(Category)) {
+            if (cmd.getCategory().equals(Category)) {
                 Commands.add(cmd);
             }
         });
@@ -81,13 +84,34 @@ public class CommandManager {
 
     public void run(SlashCommandEvent event) {
 
-        if(event.getGuild() == null) return;
+        if (event.getGuild() == null || event.getMember() == null) {
+            event.reply("No puedo ejecutar comandos en mensajes privados!").queue();
+            return;
+        }
+
         Document Guild = Database.getGuildDocument(event.getGuild().getId());
 
         String invoke = event.getName();
         Command cmd = this.getCommand(invoke);
 
-        if(cmd != null) {
+        if (cmd != null) {
+
+            String LogChannelID = Database.getLogChannelIDByGuildID(event.getGuild().getId());
+            if (LogChannelID == null) return;
+
+            TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
+            if (LogChannel == null) return;
+
+            EmbedBuilder Embed = new EmbedBuilder()
+                    .setColor(config.getEmbedColor())
+                    .setAuthor("Comando ejecutado", null, event.getJDA().getSelfUser().getAvatarUrl())
+                    .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                    .addField(event.getMember().getUser().getAsTag(), String.format("```yaml\nID: %s```", event.getMember().getUser().getId()), false)
+                    .addField("Comando", "`/" + cmd.getName()+"`", true)
+                    .addField("Canal", "<#" + event.getChannel().getId() + ">", true);
+
+            LogChannel.sendMessageEmbeds(Embed.build()).queue();
+
             cmd.run(event, Guild, config);
         }
     }

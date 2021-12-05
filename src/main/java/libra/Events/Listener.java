@@ -5,7 +5,6 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import libra.Config.Config;
-import libra.Database.Database;
 import libra.Functions.DiscordTogether;
 import libra.Functions.Recordatorios;
 import libra.Utils.Command.Command;
@@ -16,7 +15,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -32,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -314,25 +311,6 @@ public class Listener extends ListenerAdapter {
 
         if (internalLogWebhook != null)
             internalLogWebhook.send(Embed);
-    }
-
-    @Override
-    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-
-        String LogChannelID = Database.getLogChannelIDByGuildID(event.getGuild().getId());
-        if (LogChannelID == null) return;
-
-        TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
-        if (LogChannel == null) return;
-
-        EmbedBuilder Embed = new EmbedBuilder()
-                .setColor(Color.decode("#2BFB8D"))
-                .setAuthor("Un usuario se ha unido al servidor", null,  event.getJDA().getSelfUser().getAvatarUrl())
-                .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                .addField(event.getMember().getUser().getAsTag(), String.format("```yaml\nID: %s```", event.getMember().getUser().getId()), false);
-
-        LogChannel.sendMessageEmbeds(Embed.build()).queue();
-
     }
 
 }

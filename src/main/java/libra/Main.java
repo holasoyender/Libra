@@ -2,6 +2,7 @@ package libra;
 
 import io.sentry.Sentry;
 import libra.Config.Config;
+import libra.Events.GuildLogs;
 import libra.Events.Listener;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -33,7 +34,7 @@ public class Main {
         builder.setActivity(Activity.watching(Config.getStatus()));
 
         builder.setToken(Config.getToken());
-        builder.addEventListeners(new Listener());
+        builder.addEventListeners(new Listener(), new GuildLogs());
 
         builder.setMemberCachePolicy(MemberCachePolicy.VOICE.or(MemberCachePolicy.OWNER));
         builder.setChunkingFilter(ChunkingFilter.NONE);
