@@ -6,8 +6,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import libra.Config.Config;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import org.bson.Document;
+
+import java.util.ArrayList;
 
 public class Database {
 
@@ -35,7 +36,7 @@ public class Database {
 
         if (Guild != null) return;
 
-        Document newDocument = new Document("GuildID", guildID).append("Logs", new Document("Enabled", false).append("ChannelID", ""));
+        Document newDocument = new Document("GuildID", guildID).append("Logs", new Document("Enabled", false).append("ChannelID", "")).append("DisabledCommands", new ArrayList<String>());
         Guilds.insertOne(newDocument);
 
     }

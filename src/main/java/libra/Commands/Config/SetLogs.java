@@ -39,54 +39,43 @@ public class SetLogs implements Command {
 
             if (isEnabled) {
                 context.reply(config.getEmojis().Error + "Debes especificar un canal para enviar los logs del servidor si quieres que estén habilitados!").setEphemeral(true).queue();
-            }else {
-
-                Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
-
-                if (GuildDocument == null) {
-
-                    Database.getDatabase().getCollection("Guilds").insertOne(
-                            new Document("GuildID", context.getGuild().getId())
-                                    .append("Logs", new Document("Enabled", isEnabled).append("ChannelID", "")));
-
-                    context.reply(config.getEmojis().Success + "Los logs del servidor han sido deshabilitados!").setEphemeral(false).queue();
-
-                } else {
-
-                    Database.getDatabase().getCollection("Guilds").updateOne(eq("GuildID", context.getGuild().getId()),
-                            new Document("$set", new Document("Logs", new Document("Enabled", isEnabled).append("ChannelID", ""))));
-
-                    context.reply(config.getEmojis().Success + "Los logs del servidor han sido deshabilitados!").setEphemeral(false).queue();
-
-                }
+                return;
             }
+
+            Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
+
+            if (GuildDocument == null) {
+                context.reply(config.getEmojis().Error + "Parece que tu servidor no está en nuestra base de datos!\nAcciona el comando otra vez, y si el error persiste, contacta con el soporte.").setEphemeral(true).queue();
+                Database.createGuildDocument(context.getGuild().getId());
+                return;
+            }
+
+            Database.getDatabase().getCollection("Guilds").updateOne(eq("GuildID", context.getGuild().getId()),
+                    new Document("$set", new Document("Logs", new Document("Enabled", isEnabled).append("ChannelID", ""))));
+
+            context.reply(config.getEmojis().Success + "Los logs del servidor han sido deshabilitados!").setEphemeral(false).queue();
+
         } else {
 
             Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
             GuildChannel LogChannel = Channel.getAsGuildChannel();
-            if(LogChannel.getType() != ChannelType.TEXT) {
+            if (LogChannel.getType() != ChannelType.TEXT) {
                 context.reply(config.getEmojis().Error + "El canal de logs debe ser un canal de texto!").setEphemeral(true).queue();
                 return;
             }
 
             if (GuildDocument == null) {
-
-
-                Database.getDatabase().getCollection("Guilds").insertOne(
-                        new Document("GuildID", context.getGuild().getId())
-                                .append("Logs", new Document("Enabled", isEnabled).append("ChannelID", LogChannel.getId())));
-
-                context.reply(config.getEmojis().Success + "Los logs del servidor han sido habilitados en el canal "+LogChannel.getAsMention()+"!").setEphemeral(false).queue();
-
-            } else {
-
-                Database.getDatabase().getCollection("Guilds")
-                        .updateOne(eq("GuildID", context.getGuild().getId()),
-                                new Document("$set", new Document("Logs", new Document("Enabled", isEnabled).append("ChannelID", LogChannel.getId()))));
-
-                context.reply(config.getEmojis().Success + "Los logs del servidor han sido habilitados en el canal "+LogChannel.getAsMention()+"!").setEphemeral(false).queue();
-
+                context.reply(config.getEmojis().Error + "Parece que tu servidor no está en nuestra base de datos!\nAcciona el comando otra vez, y si el error persiste, contacta con el soporte.").setEphemeral(true).queue();
+                Database.createGuildDocument(context.getGuild().getId());
+                return;
             }
+
+            Database.getDatabase().getCollection("Guilds")
+                    .updateOne(eq("GuildID", context.getGuild().getId()),
+                            new Document("$set", new Document("Logs", new Document("Enabled", isEnabled).append("ChannelID", LogChannel.getId()))));
+
+            context.reply(config.getEmojis().Success + "Los logs del servidor han sido habilitados en el canal " + LogChannel.getAsMention() + "!").setEphemeral(false).queue();
+
         }
 
     }
@@ -119,7 +108,7 @@ public class SetLogs implements Command {
     @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription())
-                .addOptions(new OptionData(OptionType.BOOLEAN, "habilitar", "Habilitar o deshabilitar los logs del servidor", true),
+                .addOptions(new OptionData(OptionType.BOOLEAN, "habilitar", "Deshabilitar o deshabilitar los logs del servidor", true),
                         new OptionData(OptionType.CHANNEL, "canal", "Canal para enviar los logs del servidor", false));
 
     }

@@ -1,9 +1,9 @@
 package libra.Utils.Command;
 
 import libra.Commands.Bot.*;
-import libra.Commands.Config.SetLogs;
+import libra.Commands.Config.*;
 import libra.Commands.Info.*;
-import libra.Commands.Music.Play;
+import libra.Commands.Music.*;
 import libra.Commands.Ocio.*;
 
 import libra.Config.Config;
@@ -28,6 +28,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Deshabilitar(this));
         addCommand(new GitHub());
         addCommand(new SetLogs());
         addCommand(new Juntos());
