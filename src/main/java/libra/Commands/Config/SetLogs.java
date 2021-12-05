@@ -4,6 +4,7 @@ import libra.Config.Config;
 import libra.Database.Database;
 import libra.Utils.Command.Command;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -63,6 +64,10 @@ public class SetLogs implements Command {
 
             Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
             GuildChannel LogChannel = Channel.getAsGuildChannel();
+            if(LogChannel.getType() != ChannelType.TEXT) {
+                context.reply(config.getEmojis().Error + "El canal de logs debe ser un canal de texto!").setEphemeral(true).queue();
+                return;
+            }
 
             if (GuildDocument == null) {
 

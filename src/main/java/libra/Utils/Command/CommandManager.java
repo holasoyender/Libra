@@ -97,20 +97,24 @@ public class CommandManager {
         if (cmd != null) {
 
             String LogChannelID = Database.getLogChannelIDByGuildID(event.getGuild().getId());
-            if (LogChannelID == null) return;
 
-            TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
-            if (LogChannel == null) return;
+            if (LogChannelID != null) {
+                if(!LogChannelID.isEmpty()) {
+                    TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
+                    if (LogChannel != null) {
 
-            EmbedBuilder Embed = new EmbedBuilder()
-                    .setColor(config.getEmbedColor())
-                    .setAuthor("Comando ejecutado", null, event.getJDA().getSelfUser().getAvatarUrl())
-                    .setThumbnail(event.getMember().getUser().getAvatarUrl())
-                    .addField(event.getMember().getUser().getAsTag(), String.format("```yaml\nID: %s```", event.getMember().getUser().getId()), false)
-                    .addField("Comando", "`/" + cmd.getName()+"`", true)
-                    .addField("Canal", "<#" + event.getChannel().getId() + ">", true);
+                        EmbedBuilder Embed = new EmbedBuilder()
+                                .setColor(config.getEmbedColor())
+                                .setAuthor("Comando ejecutado", null, event.getJDA().getSelfUser().getAvatarUrl())
+                                .setThumbnail(event.getMember().getUser().getAvatarUrl())
+                                .addField(event.getMember().getUser().getAsTag(), String.format("```yaml\nID: %s```", event.getMember().getUser().getId()), false)
+                                .addField("Comando", "`/" + cmd.getName() + "`", true)
+                                .addField("Canal", "<#" + event.getChannel().getId() + ">", true);
 
-            LogChannel.sendMessageEmbeds(Embed.build()).queue();
+                        LogChannel.sendMessageEmbeds(Embed.build()).queue();
+                    }
+                }
+            }
 
             cmd.run(event, Guild, config);
         }

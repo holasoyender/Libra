@@ -45,8 +45,11 @@ public class Database {
     }
 
     public static String getLogChannelIDByGuildID(String GuildID) {
+        Document _Guild = Database.getGuildDocument(GuildID);
+        if(_Guild == null) return null;
+        Object _Logs = _Guild.get("Logs");
 
-        Document Logs = (Document) Database.getGuildDocument(GuildID).get("Logs");
+        Document Logs = (Document) _Logs;
         return Logs.get("ChannelID").toString();
 
     }
