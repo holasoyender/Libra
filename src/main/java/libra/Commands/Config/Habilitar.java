@@ -3,7 +3,6 @@ package libra.Commands.Config;
 import libra.Config.Config;
 import libra.Database.Database;
 import libra.Utils.Command.Command;
-import libra.Utils.Command.CommandManager;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -16,38 +15,23 @@ import java.util.ArrayList;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public class Deshabilitar implements Command {
-
-    private final CommandManager manager;
-
-    public Deshabilitar(CommandManager manager) {
-        this.manager = manager;
-    }
-
+public class Habilitar implements Command {
     @SuppressWarnings("unchecked")
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
-
-        if (context.getMember() == null || context.getGuild() == null) return;
+        if (context.getGuild() == null || context.getMember() == null) return;
 
         if (!context.getMember().hasPermission(Permission.MANAGE_SERVER)) {
             context.reply(config.getEmojis().Error + "No tienes permisos para ejecutar este comando").setEphemeral(true).queue();
             return;
         }
 
-        OptionMapping toDisableRaw = context.getOption("comando");
-        if(toDisableRaw == null) {
-            context.reply(config.getEmojis().Error + "Debes especificar el comando a deshabilitar").setEphemeral(true).queue();
+        OptionMapping toEnableRaw = context.getOption("comando");
+        if(toEnableRaw == null) {
+            context.reply(config.getEmojis().Error + "Debes especificar el comando a habilitar").setEphemeral(true).queue();
             return;
         }
-        String toDisable = toDisableRaw.getAsString();
-
-        Command command = manager.getCommand(toDisable);
-
-        if (command == null) {
-            context.reply(config.getEmojis().Error+"Ese comando no existe!").setEphemeral(true).queue();
-            return;
-        }
+        String toEnable = toEnableRaw.getAsString();
 
         Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
 
@@ -58,33 +42,34 @@ public class Deshabilitar implements Command {
         }
 
         ArrayList<String> disabledCommands = (ArrayList<String>) GuildDocument.get("DisabledCommands");
-        if(disabledCommands.contains(command.getName())) {
-            context.reply(config.getEmojis().Error+"Ese comando ya está deshabilitado!").setEphemeral(true).queue();
+        if(!disabledCommands.contains(toEnable)) {
+            context.reply(config.getEmojis().Error+"Ese comando no está deshabilitado!").setEphemeral(true).queue();
             return;
         }
 
-        disabledCommands.add(command.getName());
+        disabledCommands.remove(toEnable);
+
         Database.getDatabase().getCollection("Guilds")
                 .updateOne(eq("GuildID", context.getGuild().getId()),
                         new Document("$set", new Document("DisabledCommands", disabledCommands)));
 
-        context.reply(config.getEmojis().Success+"Comando `"+command.getName()+"` deshabilitado!").setEphemeral(false).queue();
+        context.reply(config.getEmojis().Success+"Comando `"+toEnable+"` habilitado!").setEphemeral(false).queue();
 
     }
 
     @Override
     public String getName() {
-        return "deshabilitar";
+        return "habilitar";
     }
 
     @Override
     public String getDescription() {
-        return "Deshabilitar el uso de un comando";
+        return "Habilita el uso de un comando";
     }
 
     @Override
     public String getUsage() {
-        return "deshabilitar <Comando>";
+        return "habilitar <Comando>";
     }
 
     @Override
@@ -100,6 +85,6 @@ public class Deshabilitar implements Command {
     @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription())
-                .addOptions(new OptionData(OptionType.STRING, "comando", "Nombre del comando a deshabilitar", true));
+                .addOptions(new OptionData(OptionType.STRING, "comando", "Nombre del comando a habilitar", true));
     }
 }

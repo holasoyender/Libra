@@ -5,6 +5,7 @@ import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import libra.Config.Config;
+import libra.Database.Database;
 import libra.Functions.DiscordTogether;
 import libra.Functions.Recordatorios;
 import libra.Utils.Command.Command;
@@ -25,6 +26,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import javax.script.ScriptEngine;
@@ -290,6 +292,11 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
+
+        Document GuildDocument = Database.getGuildDocument(event.getGuild().getId());
+        if(GuildDocument == null)
+            Database.createGuildDocument(event.getGuild().getId());
+
         WebhookEmbed Embed = new WebhookEmbedBuilder()
                 .setColor(0x5CD6FA)
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Me han metido en un nuevo servidor servidor", event.getJDA().getSelfUser().getAvatarUrl(), null))

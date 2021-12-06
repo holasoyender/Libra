@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class CommandManager {
 
     private final List<Command> commands = new ArrayList<>();
@@ -28,6 +29,8 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Deshabilitados(this));
+        addCommand(new Habilitar());
         addCommand(new Deshabilitar(this));
         addCommand(new GitHub());
         addCommand(new SetLogs());
@@ -97,10 +100,21 @@ public class CommandManager {
 
         if (cmd != null) {
 
+            if (Guild != null) {
+                ArrayList<String> disabledCommands = (ArrayList<String>) Guild.get("DisabledCommands");
+
+                if (disabledCommands != null) {
+                    if (disabledCommands.contains(cmd.getName())) {
+                        event.reply(config.getEmojis().Error+"Este comando está deshabilitado para este servidor!").setEphemeral(true).queue();
+                        return;
+                    }
+                }
+            }
+
             String LogChannelID = Database.getLogChannelIDByGuildID(event.getGuild().getId());
 
             if (LogChannelID != null) {
-                if(!LogChannelID.isEmpty()) {
+                if (!LogChannelID.isEmpty()) {
                     TextChannel LogChannel = event.getGuild().getTextChannelById(LogChannelID);
                     if (LogChannel != null) {
 
