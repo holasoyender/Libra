@@ -3,7 +3,7 @@ package libra.Utils.Command;
 import libra.Commands.Bot.*;
 import libra.Commands.Config.*;
 import libra.Commands.Info.*;
-import libra.Commands.Moderation.Clear;
+import libra.Commands.Moderation.*;
 import libra.Commands.Music.*;
 import libra.Commands.Ocio.*;
 
