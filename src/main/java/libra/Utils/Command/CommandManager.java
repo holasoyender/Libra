@@ -3,6 +3,7 @@ package libra.Utils.Command;
 import libra.Commands.Bot.*;
 import libra.Commands.Config.*;
 import libra.Commands.Info.*;
+import libra.Commands.Moderation.Clear;
 import libra.Commands.Music.*;
 import libra.Commands.Ocio.*;
 
@@ -30,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Clear());
         addCommand(new Deshabilitados(this));
         addCommand(new Habilitar());
         addCommand(new Deshabilitar(this));

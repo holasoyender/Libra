@@ -231,6 +231,7 @@ public class Listener extends ListenerAdapter {
                                         .setPlaceholder("Elija la categoría")
                                         .addOption("Información", "cmd:help:Información:" + event.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
                                         .addOption("Bot", "cmd:help:Bot:" + event.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
+                                        .addOption("Moderación", "cmd:help:Moderación:"+event.getUser().getId(), "Lista de comandos de la sección de Moderación", Emoji.fromUnicode("\uD83D\uDDE1️"))
                                         .addOption("Música", "cmd:help:Música:" + event.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
                                         .addOption("Ocio", "cmd:help:Ocio:" + event.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
                                         .addOption("Configuración", "cmd:help:Configuración:"+event.getUser().getId(), "Lista de comandos de la sección de Configuración", Emoji.fromUnicode("⚙️"))
