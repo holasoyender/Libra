@@ -9,6 +9,7 @@ import libra.Commands.Ocio.*;
 import libra.Config.Config;
 import libra.Database.Database;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.bson.Document;
@@ -105,8 +106,10 @@ public class CommandManager {
 
                 if (disabledCommands != null) {
                     if (disabledCommands.contains(cmd.getName())) {
-                        event.reply(config.getEmojis().Error+"Este comando está deshabilitado para este servidor!").setEphemeral(true).queue();
-                        return;
+                        if(!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
+                            event.reply(config.getEmojis().Error + "Este comando está deshabilitado para este servidor!").setEphemeral(true).queue();
+                            return;
+                        }
                     }
                 }
             }
