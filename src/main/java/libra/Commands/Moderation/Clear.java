@@ -2,6 +2,7 @@ package libra.Commands.Moderation;
 
 import libra.Config.Config;
 import libra.Utils.Command.Command;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -18,6 +19,12 @@ import java.util.List;
 public class Clear implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
+        if(context.getMember() == null) return;
+
+        if (!context.getMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            context.reply(config.getEmojis().Error + "No tienes permisos para ejecutar este comando").setEphemeral(true).queue();
+            return;
+        }
 
         OptionMapping CommandOption = context.getOption("número");
         if (CommandOption == null) {
