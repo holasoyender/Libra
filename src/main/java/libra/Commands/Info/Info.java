@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import org.bson.Document;
 
+import java.time.Instant;
+
 public class Info implements Command {
 
     @Override
@@ -44,7 +46,9 @@ public class Info implements Command {
                 .addField("Badges", this.badges(User), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
                 .addField("Rol más alto", Member != null ? Member.getRoles().get(0).getAsMention() : "Sin roles", true)
-                .setImage(User.retrieveProfile().complete().getBannerUrl()+"?size=512")
+                .setImage(User.retrieveProfile().complete().getBannerUrl() == null ? null : User.retrieveProfile().complete().getBannerUrl()+"?size=512")
+                .setFooter("Pedido por "+context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                .setTimestamp(Instant.now())
                 .setThumbnail(URL);
 
         if(Member == null) {

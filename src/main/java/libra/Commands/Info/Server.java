@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import org.bson.Document;
 
+import java.time.Instant;
+
 public class Server implements Command {
 
     @Override
@@ -31,6 +33,8 @@ public class Server implements Command {
                 .addField("Número de canales", context.getGuild().getChannels().size()+" canales", true)
                 .addField("Número de Roles", context.getGuild().getRoles().size()+ " roles", true)
 
+                .setFooter("Pedido por "+context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                .setTimestamp(Instant.now())
                 .setThumbnail(context.getGuild().getIconUrl());
 
         context.replyEmbeds(Embed.build()).queue();

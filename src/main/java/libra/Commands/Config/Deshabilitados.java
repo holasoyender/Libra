@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class Deshabilitados implements Command {
@@ -34,7 +35,10 @@ public class Deshabilitados implements Command {
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.getEmbedColor())
                 .setAuthor("Comandos deshabilitados", null, context.getJDA().getSelfUser().getAvatarUrl())
+                .setFooter("Pedido por "+context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                .setTimestamp(Instant.now())
                 .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl());
+
 
         Document GuildDocument = Database.getGuildDocument(context.getGuild().getId());
 

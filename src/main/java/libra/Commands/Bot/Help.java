@@ -32,7 +32,7 @@ public class Help implements Command {
         if (CommandOption == null) {
             EmbedBuilder embed = new EmbedBuilder()
                     .setAuthor("Lista de comandos ", null , context.getJDA().getSelfUser().getAvatarUrl())
-                    .setFooter("> " + context.getUser().getAsTag(), context.getUser().getAvatarUrl())
+                    .setFooter("Pedido por "+context.getUser().getAsTag(), context.getUser().getAvatarUrl())
                     .setThumbnail(context.getJDA().getSelfUser().getAvatarUrl())
                     .setColor(config.getEmbedColor())
                     .setTimestamp(Instant.now())
