@@ -77,12 +77,12 @@ public class Mute implements Command {
 
         List<Role> Roles = context.getGuild().getRolesByName("Muteado", true);
         if(Roles.size() == 0) {
-            context.reply(config.getEmojis().Error + "No se ha encontrado un rol llamado **Muteado**").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "No se ha encontrado el rol **Muteado**, por favor crealo y acciona el comando de nuevo").setEphemeral(true).queue();
             return;
         }
         Role MuteRole = Roles.get(0);
         if(MuteRole == null) {
-            context.reply(config.getEmojis().Error + "No se ha encontrado un rol llamado **Muteado**").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "No se ha encontrado el rol **Muteado**, por favor crealo y acciona el comando de nuevo").setEphemeral(true).queue();
             return;
         }
 
