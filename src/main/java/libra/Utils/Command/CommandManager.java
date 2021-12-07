@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Kick());
         addCommand(new Warn());
         addCommand(new Clear());
         addCommand(new Deshabilitados(this));
