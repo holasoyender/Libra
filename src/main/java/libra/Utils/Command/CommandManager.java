@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Limitar());
         addCommand(new Unmute());
         addCommand(new Mute());
         addCommand(new ModInfr());
