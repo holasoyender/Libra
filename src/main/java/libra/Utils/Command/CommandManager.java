@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new DelInfr());
         addCommand(new Infracciones());
         addCommand(new Unban());
         addCommand(new Ban());
