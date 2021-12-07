@@ -3,6 +3,7 @@ package libra.Database;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import net.dv8tion.jda.api.entities.Guild;
 import org.bson.Document;
 
 public class Infractions {
@@ -38,6 +39,5 @@ public class Infractions {
         }
         return ID;
     }
-
 }
 

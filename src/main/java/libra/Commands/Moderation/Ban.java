@@ -128,8 +128,8 @@ public class Ban implements Command {
     @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription())
-                .addOptions(new OptionData(OptionType.USER, "miembro", "Miembro a expulsar", true),
-                        new OptionData(OptionType.STRING, "razón", "Razón del expulsar", false),
+                .addOptions(new OptionData(OptionType.USER, "miembro", "Miembro a banear", true),
+                        new OptionData(OptionType.STRING, "razón", "Razón del banear", false),
                         new OptionData(OptionType.BOOLEAN, "md", "Mandar o no mandar un mensaje directo al usuario sancionado", false));
     }
 }
