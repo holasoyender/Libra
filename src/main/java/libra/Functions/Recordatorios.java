@@ -39,7 +39,7 @@ public class Recordatorios {
 
                 try {
                     //noinspection BusyWait
-                    Thread.sleep(10000);
+                    Thread.sleep(30000);
                 } catch (InterruptedException ex) {
                     System.out.println("Error: " + ex.getMessage());
                 }
