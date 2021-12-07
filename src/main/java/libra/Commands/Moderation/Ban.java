@@ -13,13 +13,12 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.bson.Document;
 
-public class Kick implements Command {
+public class Ban implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
-
         if (context.getMember() == null || context.getGuild() == null) return;
 
-        if (!context.getMember().hasPermission(Permission.KICK_MEMBERS)) {
+        if (!context.getMember().hasPermission(Permission.BAN_MEMBERS)) {
             context.reply(config.getEmojis().Error + "No tienes permisos para ejecutar este comando").setEphemeral(true).queue();
             return;
         }
@@ -29,7 +28,7 @@ public class Kick implements Command {
         OptionMapping NOMDOption = context.getOption("md");
 
         if (MemberOption == null) {
-            context.reply(config.getEmojis().Error + "Debes especificar un miembro a expulsar").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "Debes especificar un miembro a banear").setEphemeral(true).queue();
             return;
         }
 
@@ -45,17 +44,17 @@ public class Kick implements Command {
         }
 
         if (Member.equals(context.getMember())) {
-            context.reply(config.getEmojis().Error + "No puedes expulsarte a ti mismo").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "No puedes banearte a ti mismo").setEphemeral(true).queue();
             return;
         }
 
         if (Member.getId().equals(context.getJDA().getSelfUser().getId())) {
-            context.reply(config.getEmojis().Error + "No puedes expulsarme a mi!").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "No puedes banearme a mi!").setEphemeral(true).queue();
             return;
         }
 
         if (!context.getMember().canInteract(Member)) {
-            context.reply(config.getEmojis().Error + "No tienes permisos para expulsar a este miembro").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + "No tienes permisos para banear a este miembro").setEphemeral(true).queue();
             return;
         }
 
@@ -66,7 +65,7 @@ public class Kick implements Command {
                 Member.getUser().getName(),
                 context.getUser().getName(),
                 Reason,
-                "Kick",
+                "Ban",
                 "N/A",
                 Time.getTime(),
                 Infractions.generateID(context.getGuild().getId())
@@ -80,13 +79,13 @@ public class Kick implements Command {
 
             String finalReason = Reason;
             try {
-                Member.getUser().openPrivateChannel().complete().sendMessage("Has sido expulsado del servidor **" + context.getGuild().getName() + "** por " + context.getMember().getAsMention() + " con la razón: `" + Reason + "`")
+                Member.getUser().openPrivateChannel().complete().sendMessage("Has sido expulsado permanentemente del servidor **" + context.getGuild().getName() + "** por " + context.getMember().getAsMention() + " con la razón: `" + Reason + "`")
                         .queue(
-                                ok -> context.reply(config.getEmojis().Success + "Has expulsado a " + Member.getAsMention() + " con la razón: `" + finalReason + "`.").setEphemeral(false).queue(),
-                                err -> context.reply(config.getEmojis().Success + "Has expulsado a " + Member.getAsMention() + " con la razón: `" + finalReason + "`, pero no he podido notificarle.").setEphemeral(false).queue());
+                                ok -> context.reply(config.getEmojis().Success + "Has expulsado permanentemente a " + Member.getAsMention() + " con la razón: `" + finalReason + "`.").setEphemeral(false).queue(),
+                                err -> context.reply(config.getEmojis().Success + "Has expulsado permanentemente a " + Member.getAsMention() + " con la razón: `" + finalReason + "`, pero no he podido notificarle.").setEphemeral(false).queue());
 
             } catch (Exception e) {
-                context.reply(config.getEmojis().Success + "Has expulsado a " + Member.getAsMention() + " con la razón: `" + finalReason + "`, pero no he podido notificarle.").setEphemeral(false).queue();
+                context.reply(config.getEmojis().Success + "Has expulsado permanentemente a " + Member.getAsMention() + " con la razón: `" + finalReason + "`, pero no he podido notificarle.").setEphemeral(false).queue();
             }
 
         } else {
@@ -94,31 +93,31 @@ public class Kick implements Command {
         }
 
         try {
-            context.getGuild().kick(Member).reason(Reason).queue();
-        }catch (Exception e){
-            context.reply(config.getEmojis().Error + "No se ha podido expulsar al miembro, comprueba que tengo los permisos necesarios!").setEphemeral(true).queue();
-        }
 
+            context.getGuild().ban(Member, 0).reason(Reason).queue();
+        }catch (Exception e){
+            context.reply(config.getEmojis().Error + "No se ha podido expulsar permanentemente al miembro, comprueba que tengo los permisos necesarios!").setEphemeral(true).queue();
+        }
     }
 
     @Override
     public String getName() {
-        return "kick";
+        return "ban";
     }
 
     @Override
     public String getDescription() {
-        return "Expulsa a un usuario del servidor";
+        return "Expulsar permanentemente un usuario del servidor";
     }
 
     @Override
     public String getUsage() {
-        return "kick <Usuario> <Razón>";
+        return "ban <Usuario> <Razón>";
     }
 
     @Override
     public String getPermissions() {
-        return "Expulsar miembros";
+        return "Banear miembros";
     }
 
     @Override
