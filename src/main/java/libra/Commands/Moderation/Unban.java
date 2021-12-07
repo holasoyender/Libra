@@ -21,14 +21,14 @@ public class Unban implements Command {
             return;
         }
 
-        OptionMapping MemberOption = context.getOption("miembro");
+        OptionMapping UserOption = context.getOption("usuario");
 
-        if (MemberOption == null) {
-            context.reply(config.getEmojis().Error + "Debes especificar un miembro a desbanear").setEphemeral(true).queue();
+        if (UserOption == null) {
+            context.reply(config.getEmojis().Error + "Debes especificar un usuario a desbanear").setEphemeral(true).queue();
             return;
         }
 
-        User User = MemberOption.getAsUser();
+        User User = UserOption.getAsUser();
 
         try {
             context.getGuild().unban(User).reason(null).queue(
@@ -67,6 +67,6 @@ public class Unban implements Command {
     @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription())
-                .addOptions(new OptionData(OptionType.USER, "miembro", "Miembro a desbanear", true));
+                .addOptions(new OptionData(OptionType.USER, "usuario", "Usuario a desbanear", true));
     }
 }

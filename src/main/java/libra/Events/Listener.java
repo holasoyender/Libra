@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +34,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -201,6 +203,7 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
+        if(event.getGuild() == null) return;
         String Id = event.getComponentId();
         String[] Args = Id.split(":");
 
@@ -241,6 +244,79 @@ public class Listener extends ListenerAdapter {
                     }
 
                     break;
+
+                case "infracciones":
+
+                    String UserID = Args[2];
+                    int Page = Integer.parseInt(Args[3]);
+                    String Action = Args[4];
+                    String ModID = Args[5];
+
+                    if (!event.getUser().getId().equals(ModID)) {
+                        event.reply(config.getEmojis().Error + "No puedes usar este botón!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    List<Document> allInfractions = Database.getInfractionsByID(UserID, event.getGuild().getId()).into(new ArrayList<>());
+
+                    if (allInfractions.isEmpty()) {
+                        event.reply(config.getEmojis().Error + "El usuario no tiene infracciones").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    List<List<Document>> allInfractionsSplit = new ArrayList<>();
+                    int i = 0;
+                    while (i < allInfractions.size()) {
+                        allInfractionsSplit.add(allInfractions.subList(i, Math.min(i + 5, allInfractions.size())));
+                        i += 5;
+                    }
+
+
+                    if (Action.equals("back")) {
+                        Page -= 1;
+                        if(Page < 0) {
+                            event.reply(config.getEmojis().Error + "No puedes retroceder más!").setEphemeral(true).queue();
+                            return;
+                        }
+                    }
+
+                    if(Action.equals("next")) {
+                        Page += 1;
+                        if(Page > allInfractionsSplit.size() - 1) {
+                            event.reply(config.getEmojis().Error + "No puedes avanzar más!").setEphemeral(true).queue();
+                            return;
+                        }
+                    }
+                    MessageEmbed oldEmbed = event.getMessage().getEmbeds().get(0);
+
+                    String Author = "el usuario";
+                    if(oldEmbed.getAuthor() != null) Author = oldEmbed.getAuthor().getName();
+                    String Thumbnail = event.getJDA().getSelfUser().getAvatarUrl();
+                    if(oldEmbed.getThumbnail() != null) Thumbnail = oldEmbed.getThumbnail().getUrl();
+
+                    int finalPage = Page+1;
+
+                    EmbedBuilder Embed = new EmbedBuilder()
+                            .setColor(config.getEmbedColor())
+                            .setAuthor(Author, null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setThumbnail(Thumbnail)
+                            .setDescription("Para borrar una infracción, usa el comando `/delinfracción <Usuario> <ID>`\n**"+allInfractions.size()+"** infracciones totales")
+                            .setFooter("Página "+finalPage+" de " + allInfractionsSplit.size(), null);
+
+                    for (Document infraction : allInfractionsSplit.get(Page)) {
+                        Embed.addField(" - "+infraction.get("Type")+" #"+infraction.get("ID"), "```"+infraction.get("Reason")+"```\n**Fecha**: "+ TimeFormat.DEFAULT.format(infraction.getLong("Date"))+"\n**Duración**: "+infraction.get("Duration")+"\n**Moderador**: `"+infraction.get("Moderator")+"`", true);
+                    }
+
+                    event.editMessageEmbeds(Embed.build()).setActionRow(
+                            Button.primary("cmd:infracciones:" + UserID + ":"+Page+":back:"+event.getUser().getId(), "◀"),
+                            Button.primary("cmd:infracciones:" + UserID + ":"+Page+":next:"+event.getUser().getId(), "▶")
+                    ).queue();
+
+
+                    break;
+
+                default: event.reply(config.getEmojis().Error + "Interacción desconocida!").setEphemeral(true).queue();
+
 
             }
         }

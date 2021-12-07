@@ -1,10 +1,7 @@
 package libra.Database;
 
 import com.mongodb.*;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import libra.Config.Config;
 import org.bson.Document;
 
@@ -53,5 +50,11 @@ public class Database {
         Document Logs = (Document) _Logs;
         return Logs.get("ChannelID").toString();
 
+    }
+
+    public static FindIterable<Document> getInfractionsByID(String UserID, String GuildID) {
+        MongoDatabase Database = getDatabase();
+        MongoCollection<Document> Infractions = Database.getCollection("Infracciones");
+        return Infractions.find(new Document("UserID", UserID).append("GuildID", GuildID));
     }
 }
