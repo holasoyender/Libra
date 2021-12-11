@@ -17,9 +17,30 @@ public class Config {
         Yaml yaml = new Yaml();
         File file = new File("config.yml");
 
+        String defaultConfig = """
+
+                #  ██╗       ██╗  ██████╗   ██████╗    █████╗\s
+                #  ██║       ██║  ██╔══██╗  ██╔══██╗  ██╔══██╗
+                #  ██║       ██║  ██████╔╝  ██████╔╝  ███████║
+                #  ██║       ██║  ██╔══██╗  ██╔══██╗  ██╔══██║
+                #  ███████╗  ██║  ██████╔╝  ██║  ██║  ██║  ██║
+                #  ╚══════╝  ╚═╝  ╚═════╝   ╚═╝  ╚═╝  ╚═╝  ╚═╝
+                # Este es el archivo de configuración para el bot de Discord Libra. Mas info: https://libra.kirobot.cc
+
+                BotToken: "T0K3N"    # El token de tu bot de Discord (Obligatorio)
+                SentryDNS: ""    # La DNS de Sentry.io para tracking de errores (Opcional)
+                MongoURL: "mongodb://localhost:27017/Libra"    # La URL de tu base de datos en MongoDB (Obligatorio)
+
+                OwnerID: "396683727868264449"    # La ID de usuario del propietario del bot (Obligatorio)
+                DefaultPrefix: "-"    # El prefijo que usará el bot en los comandos de owner (Opcional)
+
+                EmbedColor: "#5b6cec"    # El color de los embeds enviados por el bot (Opcional)
+                LogWebhookURL: ""    # La URL del Webhook de logs internos del bot (Opcional)
+                """;
+
         if (!(file.exists())) {
             try {
-                Files.writeString(file.toPath(), "BotToken: \"\"\nSentryDNS: \"\"\nMongoURL: \"\"\n\nOwnerID: \"\"\nDefaultPrefix: \"\"\n\nEmbedColor: \"\"\nLogWebhookURL: \"\"\n");
+                Files.writeString(file.toPath(), defaultConfig);
                 System.out.println("No se ha encontrado el archivo de config, por favor, rellena config.yml y ejecuta este programa de nuevo.");
                 System.exit(0);
             } catch (IOException e) {

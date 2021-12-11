@@ -1,5 +1,6 @@
 BotToken: "T0K3N"
-SentryDNS: "SentryDNS"
+SentryDNS: ""
+MongoURL: "mongodb://localhost:27017/Libra"
 
 OwnerID: "396683727868264449"
 DefaultPrefix: "-"
