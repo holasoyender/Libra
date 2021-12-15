@@ -19,7 +19,6 @@ public class Player {
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
 
-
     public Player() {
         this.musicManagers = new HashMap<>();
 
@@ -29,12 +28,14 @@ public class Player {
     }
 
     public GuildMusicManager getGuildAudioPlayer(Guild guild) {
-        long guildId = Long.parseLong(guild.getId());
+        long guildId = guild.getIdLong();
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null) {
+
             musicManager = new GuildMusicManager(playerManager);
             musicManagers.put(guildId, musicManager);
+
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
@@ -43,14 +44,14 @@ public class Player {
     }
 
     public void loadAndPlay(final SlashCommandEvent context, final String trackUrl) {
+        if(context.getGuild() == null) return;
         GuildMusicManager musicManager = getGuildAudioPlayer(context.getGuild());
 
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                context.getChannel().sendMessage("Adding to queue " + track.getInfo().title).queue();
+                context.reply("Adding to queue " + track.getInfo().title).queue();
 
-                musicManager.player.setVolume(50);
                 play(musicManager, track);
             }
 
@@ -69,12 +70,12 @@ public class Player {
 
             @Override
             public void noMatches() {
-                context.getChannel().sendMessage("Nothing found by " + trackUrl).queue();
+                context.reply("Nothing found by " + trackUrl).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                context.getChannel().sendMessage("Could not play: " + exception.getMessage()).queue();
+                context.reply("Could not play: " + exception.getMessage()).queue();
             }
         });
 

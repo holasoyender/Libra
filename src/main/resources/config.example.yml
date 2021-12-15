@@ -1,9 +1,18 @@
-BotToken: "T0K3N"
-SentryDNS: ""
-MongoURL: "mongodb://localhost:27017/Libra"
 
-OwnerID: "396683727868264449"
-DefaultPrefix: "-"
+#  ██╗       ██╗  ██████╗   ██████╗    █████╗
+#  ██║       ██║  ██╔══██╗  ██╔══██╗  ██╔══██╗
+#  ██║       ██║  ██████╔╝  ██████╔╝  ███████║
+#  ██║       ██║  ██╔══██╗  ██╔══██╗  ██╔══██║
+#  ███████╗  ██║  ██████╔╝  ██║  ██║  ██║  ██║
+#  ╚══════╝  ╚═╝  ╚═════╝   ╚═╝  ╚═╝  ╚═╝  ╚═╝
+# Este es el archivo de configuración para el bot de Discord Libra. Mas info: https://libra.kirobot.cc
 
-EmbedColor: "#5b6cec"
-LogWebhookURL: ""
+BotToken: "T0K3N"    # El token de tu bot de Discord (Obligatorio)
+SentryDNS: ""    # La DNS de Sentry.io para tracking de errores (Opcional)
+MongoURL: "mongodb://localhost:27017/Libra"    # La URL de tu base de datos en MongoDB (Obligatorio)
+
+OwnerID: "396683727868264449"    # La ID de usuario del propietario del bot (Obligatorio)
+DefaultPrefix: "-"    # El prefijo que usará el bot en los comandos de owner (Opcional)
+
+EmbedColor: "#5b6cec"    # El color de los embeds enviados por el bot (Opcional)
+LogWebhookURL: ""    # La URL del Webhook de logs internos del bot (Opcional)
