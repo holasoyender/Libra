@@ -1,16 +1,13 @@
 package libra.Commands.Music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
 import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
@@ -19,6 +16,7 @@ import static libra.Lavaplayer.Player.getMusicManager;
 public class Skip implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
+        if (context.getGuild() == null) return;
 
         Guild guild = context.getGuild();
         GuildMusicManager mng = getMusicManager(guild);
