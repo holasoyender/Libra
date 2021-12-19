@@ -1,21 +1,28 @@
 package libra.Commands.Music;
 
 import libra.Config.Config;
-import libra.Lavaplayer.Player;
+import libra.Lavaplayer.GuildMusicManager;
 import libra.Utils.Command.Command;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
+
+import static libra.Lavaplayer.Player.getMusicManager;
+import static libra.Lavaplayer.Player.loadAndPlay;
 
 public class Play implements Command {
 
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if (context.getGuild() == null) return;
+
+        GuildMusicManager mng = getMusicManager(context.getGuild());
 
         OptionMapping raw = context.getOption("canción");
 
@@ -38,7 +45,7 @@ public class Play implements Command {
             return;
         }
 
-        if(!Member.getVoiceState().inVoiceChannel()) {
+        if (!Member.getVoiceState().inVoiceChannel()) {
             context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
             return;
         }
@@ -50,12 +57,22 @@ public class Play implements Command {
                 context.reply(config.getEmojis().Error + " Debes de estar en el mismo canal de voz que yo!").setEphemeral(true).queue();
             }
         } else {
-            context.getGuild().getAudioManager().openAudioConnection(VoiceChannel);
-            context.getGuild().getAudioManager().setSelfDeafened(true);
-        }
+            context.getGuild().getAudioManager().setSendingHandler(mng.sendHandler);
+            try {
 
-        Player Player = new Player();
-        Player.loadAndPlay(context, Search);
+                context.getGuild().getAudioManager().openAudioConnection(VoiceChannel);
+                context.getGuild().getAudioManager().setSelfDeafened(true);
+
+            } catch (PermissionException e) {
+                if (e.getPermission() == Permission.VOICE_CONNECT) {
+                    context.reply(config.getEmojis().Error + "No tengo permisos para conectarme a ese canal de voz!").setEphemeral(true).queue();
+                    return;
+                }
+            }
+        }
+        //Comprobar si no es una URL y añadir lo de ytsearch:
+
+        loadAndPlay(mng, context.getChannel(), Search, false);
 
     }
 

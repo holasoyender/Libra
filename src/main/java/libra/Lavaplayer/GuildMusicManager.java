@@ -7,14 +7,13 @@ public class GuildMusicManager {
 
     public final AudioPlayer player;
     public final TrackScheduler scheduler;
+    public final AudioPlayerSendHandler sendHandler;
 
     public GuildMusicManager(AudioPlayerManager manager) {
+
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
-    }
-
-    public AudioPlayerSendHandler getSendHandler() {
-        return new AudioPlayerSendHandler(player);
+        sendHandler = new AudioPlayerSendHandler(player);
     }
 }

@@ -4,6 +4,7 @@ import io.sentry.Sentry;
 import libra.Config.Config;
 import libra.Events.GuildLogs;
 import libra.Events.Listener;
+import libra.Lavaplayer.Player;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 
+@SuppressWarnings("InstantiationOfUtilityClass")
 public class Main {
 
     public static void main(String[] args) {
@@ -57,6 +59,7 @@ public class Main {
 
         try {
             builder.build();
+            new Player();
             if(Config.getSentry() != null) {
                 Sentry.init(options -> {
                     options.setDsn(Config.getSentry());

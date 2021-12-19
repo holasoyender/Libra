@@ -1,0 +1,18 @@
+ - Música
+  - Canciones por queue
+  - Búsqueda automática de canciones en Youtube y Soundcloud
+  - Búsqueda de canciones en Spotify
+
+- Logs
+  - Añadir mas logs de servidor
+
+- Web
+  - Hacer la web responsive
+  - Hacer la web más amigable
+  - Añadir animaciones
+
+- API
+  - Crear una API para no depender de servicios externos en SpringBoot
+    - Comando GATO
+    - Comando PERRO
+    - Búsquedas en Spotify

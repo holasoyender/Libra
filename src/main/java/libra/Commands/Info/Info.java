@@ -38,12 +38,12 @@ public class Info implements Command {
 
         String AcBadge = "";
 
-        if(User.isBot()) AcBadge = "  <:Bot1:913500818345439283><:Bot2:913500818584518706>";
-        if(User.getId().equals(context.getGuild().getOwnerId())) AcBadge = "  <:Owner:913501281400815686>";
+        if(User.isBot()) AcBadge = config.getEmojis().BotBadge;
+        if(User.getId().equals(context.getGuild().getOwnerId())) AcBadge = config.getEmojis().OwnerBadge;
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.getEmbedColor())
                 .addField(User.getAsTag()+AcBadge , String.format("```yaml\nID: %s```",User.getId()),false)
-                .addField("Badges", this.badges(User), true)
+                .addField("Badges", this.badges(User, config), true)
                 .addField("Avatar", "[URL del Avatar]("+URL+")", true)
                 .addField("Rol más alto", Member != null ? Member.getRoles().get(0).getAsMention() : "Sin roles", true)
                 .setImage(User.retrieveProfile().complete().getBannerUrl() == null ? null : User.retrieveProfile().complete().getBannerUrl()+"?size=512")
@@ -68,7 +68,7 @@ public class Info implements Command {
                     return;
                 }
                 Embed.addField("Todos los Roles", "```\n"+Roles+"```",false);
-                Embed.addField("<:Invite:913508352108150784>  Unido al servidor", TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
+                Embed.addField(config.getEmojis().Invite+"Unido al servidor", TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
             }
         }else {
             for(Role role : Member.getRoles()) {
@@ -80,16 +80,16 @@ public class Info implements Command {
             }
 
             Embed.addField("Todos los Roles", "```\n"+Roles+"```",false);
-            Embed.addField("<:Invite:913508352108150784>  Unido al servidor",TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
+            Embed.addField(config.getEmojis().Invite+"Unido al servidor",TimeFormat.DEFAULT.format(Member.getTimeJoined())+" ("+TimeFormat.RELATIVE.format(Member.getTimeJoined())+")", false);
         }
 
-        Embed.addField("<:Time:913509404614230016>  Cuenta creada", TimeFormat.DEFAULT.format(User.getTimeCreated())+" ("+TimeFormat.RELATIVE.format(User.getTimeCreated())+")", false);
+        Embed.addField(config.getEmojis().Time+"Cuenta creada", TimeFormat.DEFAULT.format(User.getTimeCreated())+" ("+TimeFormat.RELATIVE.format(User.getTimeCreated())+")", false);
 
         context.replyEmbeds(Embed.build()).queue();
 
     }
 
-    private String badges(User user) {
+    private String badges(User user, Config config) {
         StringBuilder Badges = new StringBuilder();
 
         for(User.UserFlag flag : user.getFlags()){
@@ -97,17 +97,17 @@ public class Info implements Command {
                 Badges.append(" ");
 
             switch (flag) {
-                case STAFF -> Badges.append("<:Staff:913504958912024626>");
-                case PARTNER -> Badges.append("<:Partner:913504958362583061>");
-                case HYPESQUAD -> Badges.append("<:Hypesquad:913504958727462953>");
-                case BUG_HUNTER_LEVEL_1 -> Badges.append("<:Bug1:913504958777811045>");
-                case HYPESQUAD_BRAVERY -> Badges.append("<:Bravery:913504958400303185>");
-                case HYPESQUAD_BRILLIANCE -> Badges.append("<:Brillance:913504958404522066>");
-                case HYPESQUAD_BALANCE -> Badges.append("<:Balance:913504958526148629>");
-                case EARLY_SUPPORTER -> Badges.append("<:Early:913504958324813846>");
-                case BUG_HUNTER_LEVEL_2 -> Badges.append("<:Bug2:913504958597443614>");
-                case VERIFIED_DEVELOPER -> Badges.append("<:Developer:913504958526148630>");
-                case CERTIFIED_MODERATOR -> Badges.append("<:Moderator:913504958643601499>");
+                case STAFF -> Badges.append(config.getEmojis().STAFF);
+                case PARTNER -> Badges.append(config.getEmojis().PARTNER);
+                case HYPESQUAD -> Badges.append(config.getEmojis().HYPESQUAD);
+                case BUG_HUNTER_LEVEL_1 -> Badges.append(config.getEmojis().BUG_HUNTER_LEVEL_1);
+                case HYPESQUAD_BRAVERY -> Badges.append(config.getEmojis().HYPESQUAD_BRAVERY);
+                case HYPESQUAD_BRILLIANCE -> Badges.append(config.getEmojis().HYPESQUAD_BRILLIANCE);
+                case HYPESQUAD_BALANCE -> Badges.append(config.getEmojis().HYPESQUAD_BALANCE);
+                case EARLY_SUPPORTER -> Badges.append(config.getEmojis().EARLY_SUPPORTER);
+                case BUG_HUNTER_LEVEL_2 -> Badges.append(config.getEmojis().BUG_HUNTER_LEVEL_2);
+                case VERIFIED_DEVELOPER -> Badges.append(config.getEmojis().VERIFIED_DEVELOPER);
+                case CERTIFIED_MODERATOR -> Badges.append(config.getEmojis().CERTIFIED_MODERATOR);
             }
         }
 
