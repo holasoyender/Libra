@@ -7,6 +7,7 @@ public class Emojis {
     public String Success;
     public String Time;
     public String Invite;
+    public String Volume;
 
     /*Insignias de Discord*/
     public String STAFF;
@@ -31,6 +32,7 @@ public class Emojis {
         Success = "<:externalcontent:830859377463656479>" + "  ";
         Time = "<:Time:913509404614230016>" + "  ";
         Invite = "<:Invite:913508352108150784>" + "  ";
+        Volume = ":speaker:" + "  ";
 
         STAFF = "<:Staff:913504958912024626>";
         PARTNER = "<:Partner:913504958362583061>";

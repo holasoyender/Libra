@@ -31,6 +31,8 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Volumen());
+        addCommand(new Skip());
         addCommand(new Uptime());
         addCommand(new Limitar());
         addCommand(new Unmute());
