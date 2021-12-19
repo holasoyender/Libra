@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import static libra.Lavaplayer.Player.getMusicManager;
 import static libra.Lavaplayer.Player.loadAndPlay;
 
@@ -23,8 +26,8 @@ public class Play implements Command {
         if (context.getGuild() == null) return;
 
         GuildMusicManager mng = getMusicManager(context.getGuild());
-
         OptionMapping raw = context.getOption("canción");
+        boolean isSearch = false;
 
         if (raw == null) {
             context.reply(config.getEmojis().Error + " No has especificado ninguna canción").setEphemeral(true).queue();
@@ -70,9 +73,12 @@ public class Play implements Command {
                 }
             }
         }
-        //Comprobar si no es una URL y añadir lo de ytsearch:
+        if(!isUrl(Search)){
+            Search = "ytsearch:" + Search;
+            isSearch = true;
+        }
 
-        loadAndPlay(mng, context.getChannel(), Search, false);
+        loadAndPlay(mng, context.getChannel(), Search, isSearch);
 
     }
 
@@ -104,5 +110,14 @@ public class Play implements Command {
     @Override
     public CommandData getSlashData() {
         return new CommandData(this.getName(), this.getDescription()).addOption(OptionType.STRING, "canción", "Canción a reproducir en el canal de voz", true);
+    }
+
+    private boolean isUrl(String input) {
+        try {
+            new URL(input);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 }

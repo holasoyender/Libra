@@ -22,7 +22,7 @@ import java.util.Map;
 public class Player {
 
 
-    public static final int DEFAULT_VOLUME = 50;
+    public static final int DEFAULT_VOLUME = 75;
     private static AudioPlayerManager playerManager;
     private static Map<String, GuildMusicManager> musicManagers;
 
@@ -40,7 +40,7 @@ public class Player {
 
     }
 
-    public static void loadAndPlay(GuildMusicManager mng, final MessageChannel channel, String url, final boolean addPlaylist)
+    public static void loadAndPlay(GuildMusicManager mng, final MessageChannel channel, String url, boolean isSearch)
     {
 
         playerManager.loadItemOrdered(mng, url, new AudioLoadResultHandler()
@@ -67,15 +67,15 @@ public class Player {
                     firstTrack = playlist.getTracks().get(0);
                 }
 
-                if (addPlaylist)
+                if (isSearch)
                 {
-                    channel.sendMessage("Adding **" + playlist.getTracks().size() +"** tracks to queue from playlist: " + playlist.getName()).queue();
-                    tracks.forEach(mng.scheduler::queue);
+                    channel.sendMessage("Adding to queue " + firstTrack.getInfo().title).queue();
+                    mng.scheduler.queue(firstTrack);
                 }
                 else
                 {
-                    channel.sendMessage("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
-                    mng.scheduler.queue(firstTrack);
+                    channel.sendMessage("Adding **" + playlist.getTracks().size() +"** tracks to queue from playlist: " + playlist.getName()).queue();
+                    tracks.forEach(mng.scheduler::queue);
                 }
             }
 
