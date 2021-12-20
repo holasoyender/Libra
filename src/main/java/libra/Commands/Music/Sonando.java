@@ -9,8 +9,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
-import static libra.Lavaplayer.Player.getMusicManager;
-import static libra.Lavaplayer.Player.getTimestamp;
+import static libra.Lavaplayer.Player.*;
 
 public class Sonando implements Command {
     @Override
@@ -36,7 +35,7 @@ public class Sonando implements Command {
 
         EmbedBuilder Embed = new EmbedBuilder()
                 .setColor(config.getEmbedColor())
-                .setAuthor("Sonando ahora: " + title, url, context.getJDA().getSelfUser().getAvatarUrl())
+                .setAuthor("Sonando ahora: " + formatTitle(title), url, context.getJDA().getSelfUser().getAvatarUrl())
                 .setThumbnail("https://i.ytimg.com/vi/" + identifier + "/mqdefault.jpg")
                 .addField("Autor", author, true)
                 .addField("Duración", duration, true)

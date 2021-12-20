@@ -53,13 +53,18 @@ public class Player {
             {
                 EmbedBuilder Embed = new EmbedBuilder()
                         .setColor(config.getEmbedColor())
-                        .setAuthor("Canción añadida: ", null, event.getJDA().getSelfUser().getAvatarUrl())
-                        .setThumbnail("https://i.ytimg.com/vi/" + track.getInfo().identifier + "/mqdefault.jpg")
-                        .setTitle(track.getInfo().title, "https://www.youtube.com/watch?v=" + track.getInfo().identifier)
-                        .addField("Autor", track.getInfo().author, true)
-                        .addField("Duración", getTimestamp(track.getDuration()), true);
-                if (mng.player.getPlayingTrack() == null)
-                    Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl());
+                        .setAuthor("Canción añadida la cola ", null, event.getJDA().getSelfUser().getAvatarUrl())
+                        .setDescription("**[" + formatTitle(track.getInfo().title) + "](https://www.youtube.com/watch?v=" + track.getInfo().identifier+")**");
+
+                if (mng.player.getPlayingTrack() == null) {
+                    Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setThumbnail("https://i.ytimg.com/vi/" + track.getInfo().identifier + "/mqdefault.jpg")
+                            .setDescription(null)
+                            .setTitle(formatTitle(track.getInfo().title), "https://www.youtube.com/watch?v=" + track.getInfo().identifier)
+                            .addField("Autor", track.getInfo().author, true)
+                            .addField("Duración", getTimestamp(track.getDuration()), true);
+                }
+
 
                 mng.scheduler.queue(track);
                 event.replyEmbeds(Embed.build()).queue();
@@ -80,13 +85,18 @@ public class Player {
                 {
                     EmbedBuilder Embed = new EmbedBuilder()
                             .setColor(config.getEmbedColor())
-                            .setAuthor("Canción añadida: ", null, event.getJDA().getSelfUser().getAvatarUrl())
-                            .setThumbnail("https://i.ytimg.com/vi/" + firstTrack.getInfo().identifier + "/mqdefault.jpg")
-                            .setTitle(firstTrack.getInfo().title, "https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier)
-                            .addField("Autor", firstTrack.getInfo().author, true)
-                            .addField("Duración", getTimestamp(firstTrack.getDuration()), true);
-                    if (mng.player.getPlayingTrack() == null)
-                        Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl());
+                            .setAuthor("Canción añadida la cola ", null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setDescription("**[" + formatTitle(firstTrack.getInfo().title) + "](https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier+")**");
+
+                    if (mng.player.getPlayingTrack() == null) {
+                        Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl())
+                                .setThumbnail("https://i.ytimg.com/vi/" + firstTrack.getInfo().identifier + "/mqdefault.jpg")
+                                .setDescription(null)
+                                .setTitle(formatTitle(firstTrack.getInfo().title), "https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier)
+                                .addField("Autor", firstTrack.getInfo().author, true)
+                                .addField("Duración", getTimestamp(firstTrack.getDuration()), true);
+                    }
+
 
                     event.replyEmbeds(Embed.build()).queue();
                     mng.scheduler.queue(firstTrack);
@@ -139,6 +149,12 @@ public class Player {
             return String.format("%02d:%02d:%02d", hours, minutes, seconds);
         else
             return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public static String formatTitle(String title) {
+        return title
+                .replaceAll("\\(.*?\\)", "")
+                .replaceAll("\\[.*?]", "");
     }
 
 }

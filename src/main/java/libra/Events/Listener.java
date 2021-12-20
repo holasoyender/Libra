@@ -42,8 +42,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
-import static libra.Lavaplayer.Player.getMusicManager;
-import static libra.Lavaplayer.Player.getTimestamp;
+import static libra.Lavaplayer.Player.*;
 
 public class Listener extends ListenerAdapter {
 
@@ -373,11 +372,11 @@ public class Listener extends ListenerAdapter {
                     EmbedBuilder Embed2 = new EmbedBuilder()
                             .setColor(config.getEmbedColor())
                             .setAuthor("Lista de reproducción", null, event.getJDA().getSelfUser().getAvatarUrl())
-                            .setFooter("Página 1 de " + _finalPage +" ("+queue.size()+" canciónes totales)", null);
+                            .setFooter("Página "+_finalPage+" de " + queueSplit.size() +" ("+queue.size()+" canciónes totales)", null);
 
 
                     for(AudioTrack track : queueSplit.get(Page2)) {
-                        Embed2.addField(track.getInfo().title, "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
+                        Embed2.addField(formatTitle(track.getInfo().title), "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
                     }
 
                     event.editMessageEmbeds(Embed2.build()).setActionRow(

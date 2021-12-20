@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import static libra.Lavaplayer.Player.getMusicManager;
-import static libra.Lavaplayer.Player.getTimestamp;
+import static libra.Lavaplayer.Player.*;
 
 public class Lista implements Command {
     @Override
@@ -48,7 +47,7 @@ public class Lista implements Command {
                 .setFooter("Página 1 de " + queueSplit.size()+" ("+queue.size()+" canciónes totales)", null);
 
         for(AudioTrack track : queueSplit.get(0)) {
-            Embed.addField(track.getInfo().title, "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
+            Embed.addField(formatTitle(track.getInfo().title), "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
         }
 
         context.replyEmbeds(Embed.build()).setEphemeral(false).addActionRow(
