@@ -1,6 +1,9 @@
 package libra.Commands.Music;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
+import libra.Lavaplayer.GuildMusicManager;
+import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -8,10 +11,17 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
+import static libra.Lavaplayer.Player.getMusicManager;
+
 public class Salir implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if(context.getGuild() == null) return;
+
+        net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
+        GuildMusicManager mng = getMusicManager(guild);
+        AudioPlayer player = mng.player;
+        TrackScheduler scheduler = mng.scheduler;
 
         Member Member = context.getMember();
 
@@ -36,6 +46,10 @@ public class Salir implements Command {
             context.reply(config.getEmojis().Error + " Debo de estar en un canal de voz!").setEphemeral(true).queue();
             return;
         }
+
+        scheduler.queue.clear();
+        player.stopTrack();
+        player.setPaused(false);
 
         context.getGuild().getAudioManager().closeAudioConnection();
         context.reply(config.getEmojis().Success + " He salido del canal de voz!").setEphemeral(true).queue();

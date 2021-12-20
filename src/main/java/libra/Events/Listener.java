@@ -4,10 +4,13 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import libra.Config.Config;
 import libra.Database.Database;
 import libra.Functions.DiscordTogether;
 import libra.Functions.Recordatorios;
+import libra.Lavaplayer.GuildMusicManager;
+import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
 import libra.Utils.Command.CommandManager;
 import libra.Utils.Logger;
@@ -36,7 +39,11 @@ import javax.script.ScriptException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.regex.Pattern;
+
+import static libra.Lavaplayer.Player.getMusicManager;
+import static libra.Lavaplayer.Player.getTimestamp;
 
 public class Listener extends ListenerAdapter {
 
@@ -312,6 +319,71 @@ public class Listener extends ListenerAdapter {
                             Button.primary("cmd:infracciones:" + UserID + ":"+Page+":next:"+event.getUser().getId(), "▶")
                     ).queue();
 
+
+                    break;
+
+                case "queue":
+
+                    String Action2 = Args[3];
+                    int Page2 = Integer.parseInt(Args[2]);
+
+                    if (!event.getUser().getId().equals(Args[4])) {
+                        event.reply(config.getEmojis().Error + "No puedes usar este botón!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    net.dv8tion.jda.api.entities.Guild guild = event.getGuild();
+                    GuildMusicManager mng = getMusicManager(guild);
+                    TrackScheduler scheduler = mng.scheduler;
+
+                    if(scheduler.queue.isEmpty()) {
+                        event.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    Queue<AudioTrack> rawQueue = scheduler.queue;
+                    List<AudioTrack> queue = new ArrayList<>(rawQueue);
+
+                    List<List<AudioTrack>> queueSplit = new ArrayList<>();
+                    int _i = 0;
+                    while (_i < queue.size()) {
+                        queueSplit.add(queue.subList(_i, Math.min(_i + 5, queue.size())));
+                        _i += 5;
+                    }
+
+
+                    if (Action2.equals("back")) {
+                        Page2 -= 1;
+                        if(Page2 < 0) {
+                            event.reply(config.getEmojis().Error + "No puedes retroceder más!").setEphemeral(true).queue();
+                            return;
+                        }
+                    }
+
+                    if(Action2.equals("next")) {
+                        Page2 += 1;
+                        if(Page2 > queueSplit.size() - 1) {
+                            event.reply(config.getEmojis().Error + "No puedes avanzar más!").setEphemeral(true).queue();
+                            return;
+                        }
+                    }
+
+                    int _finalPage = Page2+1;
+
+                    EmbedBuilder Embed2 = new EmbedBuilder()
+                            .setColor(config.getEmbedColor())
+                            .setAuthor("Lista de reproducción", null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setFooter("Página 1 de " + _finalPage +" ("+queue.size()+" canciónes totales)", null);
+
+
+                    for(AudioTrack track : queueSplit.get(Page2)) {
+                        Embed2.addField(track.getInfo().title, "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
+                    }
+
+                    event.editMessageEmbeds(Embed2.build()).setActionRow(
+                            Button.primary("cmd:queue:"+Page2+":back:"+event.getUser().getId(), "◀"),
+                            Button.primary("cmd:queue:"+Page2+":next:"+event.getUser().getId(), "▶")
+                    ).queue();
 
                     break;
 

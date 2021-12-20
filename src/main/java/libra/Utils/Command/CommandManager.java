@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Lista());
         addCommand(new Sonando());
         addCommand(new Salir());
         addCommand(new Shuffle());
