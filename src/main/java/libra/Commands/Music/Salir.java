@@ -52,7 +52,7 @@ public class Salir implements Command {
         player.setPaused(false);
 
         context.getGuild().getAudioManager().closeAudioConnection();
-        context.reply(config.getEmojis().Success + " He salido del canal de voz!").setEphemeral(true).queue();
+        context.reply(config.getEmojis().Success + " He salido del canal de voz!").setEphemeral(false).queue();
     }
 
     @Override
