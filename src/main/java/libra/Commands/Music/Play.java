@@ -78,7 +78,7 @@ public class Play implements Command {
             isSearch = true;
         }
 
-        loadAndPlay(mng, context.getChannel(), Search, isSearch);
+        loadAndPlay(mng, context, Search, isSearch);
 
     }
 

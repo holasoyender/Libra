@@ -13,8 +13,10 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import libra.Config.Config;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.Map;
 
 public class Player {
 
-
+    public static final Config config = new Config();
     public static final int DEFAULT_VOLUME = 75;
     private static AudioPlayerManager playerManager;
     private static Map<String, GuildMusicManager> musicManagers;
@@ -41,7 +43,7 @@ public class Player {
 
     }
 
-    public static void loadAndPlay(GuildMusicManager mng, final MessageChannel channel, String url, boolean isSearch)
+    public static void loadAndPlay(GuildMusicManager mng, final SlashCommandEvent event, String url, boolean isSearch)
     {
 
         playerManager.loadItemOrdered(mng, url, new AudioLoadResultHandler()
@@ -49,12 +51,18 @@ public class Player {
             @Override
             public void trackLoaded(AudioTrack track)
             {
-                String msg = "Adding to queue: " + track.getInfo().title;
+                EmbedBuilder Embed = new EmbedBuilder()
+                        .setColor(config.getEmbedColor())
+                        .setAuthor("Canción añadida: ", null, event.getJDA().getSelfUser().getAvatarUrl())
+                        .setThumbnail("https://i.ytimg.com/vi/" + track.getInfo().identifier + "/mqdefault.jpg")
+                        .setTitle(track.getInfo().title, "https://www.youtube.com/watch?v=" + track.getInfo().identifier)
+                        .addField("Autor", track.getInfo().author, true)
+                        .addField("Duración", getTimestamp(track.getDuration()), true);
                 if (mng.player.getPlayingTrack() == null)
-                    msg += "\nand the Player has started playing;";
+                    Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl());
 
                 mng.scheduler.queue(track);
-                channel.sendMessage(msg).queue();
+                event.replyEmbeds(Embed.build()).queue();
             }
 
             @Override
@@ -70,12 +78,25 @@ public class Player {
 
                 if (isSearch)
                 {
-                    channel.sendMessage("Adding to queue " + firstTrack.getInfo().title).queue();
+                    EmbedBuilder Embed = new EmbedBuilder()
+                            .setColor(config.getEmbedColor())
+                            .setAuthor("Canción añadida: ", null, event.getJDA().getSelfUser().getAvatarUrl())
+                            .setThumbnail("https://i.ytimg.com/vi/" + firstTrack.getInfo().identifier + "/mqdefault.jpg")
+                            .setTitle(firstTrack.getInfo().title, "https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier)
+                            .addField("Autor", firstTrack.getInfo().author, true)
+                            .addField("Duración", getTimestamp(firstTrack.getDuration()), true);
+                    if (mng.player.getPlayingTrack() == null)
+                        Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl());
+
+                    event.replyEmbeds(Embed.build()).queue();
                     mng.scheduler.queue(firstTrack);
                 }
                 else
                 {
-                    channel.sendMessage("Adding **" + playlist.getTracks().size() +"** tracks to queue from playlist: " + playlist.getName()).queue();
+                    EmbedBuilder Embed = new EmbedBuilder()
+                            .setColor(config.getEmbedColor())
+                            .setDescription("Se han añadido **" + playlist.getTracks().size() + "** canciones a la cola");
+                    event.replyEmbeds(Embed.build()).queue();
                     tracks.forEach(mng.scheduler::queue);
                 }
             }
@@ -83,13 +104,14 @@ public class Player {
             @Override
             public void noMatches()
             {
-                channel.sendMessage("Nothing found by " + url).queue();
+                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception)
             {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").queue();
+                exception.printStackTrace();
             }
         });
     }
