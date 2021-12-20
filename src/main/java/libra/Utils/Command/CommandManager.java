@@ -31,6 +31,13 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Sonando());
+        addCommand(new Salir());
+        addCommand(new Shuffle());
+        addCommand(new Stop());
+        addCommand(new Loop());
+        addCommand(new Resume());
+        addCommand(new Pause());
         addCommand(new Volumen());
         addCommand(new Skip());
         addCommand(new Uptime());

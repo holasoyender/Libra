@@ -1,28 +1,17 @@
 package libra.Commands.Music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
-import libra.Lavaplayer.GuildMusicManager;
-import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
 
-import static libra.Lavaplayer.Player.getMusicManager;
-
-public class Skip implements Command {
+public class Salir implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
-        if (context.getGuild() == null) return;
-
-        Guild guild = context.getGuild();
-        GuildMusicManager mng = getMusicManager(guild);
-        AudioPlayer player = mng.player;
-        TrackScheduler scheduler = mng.scheduler;
+        if(context.getGuild() == null) return;
 
         Member Member = context.getMember();
 
@@ -44,34 +33,27 @@ public class Skip implements Command {
                 return;
             }
         } else {
-            context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+            context.reply(config.getEmojis().Error + " Debo de estar en un canal de voz!").setEphemeral(true).queue();
             return;
         }
 
-        if(scheduler.queue.isEmpty()) {
-            if (player.getPlayingTrack() == null)
-            {
-                context.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
-                return;
-            }
-        }
-        scheduler.nextTrack();
-        context.reply(config.getEmojis().Success+"La canción actual se ha saltado!").queue();
+        context.getGuild().getAudioManager().closeAudioConnection();
+        context.reply(config.getEmojis().Success + " He salido del canal de voz!").setEphemeral(true).queue();
     }
 
     @Override
     public String getName() {
-        return "skip";
+        return "salir";
     }
 
     @Override
     public String getDescription() {
-        return "Salta la canción actual";
+        return "Hace que el bot salga del canal de voz";
     }
 
     @Override
     public String getUsage() {
-        return "skip";
+        return "salir";
     }
 
     @Override

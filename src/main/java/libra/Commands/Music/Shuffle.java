@@ -5,7 +5,6 @@ import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
 import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -14,14 +13,13 @@ import org.bson.Document;
 
 import static libra.Lavaplayer.Player.getMusicManager;
 
-public class Skip implements Command {
+public class Shuffle implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if (context.getGuild() == null) return;
 
-        Guild guild = context.getGuild();
+        net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
         GuildMusicManager mng = getMusicManager(guild);
-        AudioPlayer player = mng.player;
         TrackScheduler scheduler = mng.scheduler;
 
         Member Member = context.getMember();
@@ -48,30 +46,28 @@ public class Skip implements Command {
             return;
         }
 
-        if(scheduler.queue.isEmpty()) {
-            if (player.getPlayingTrack() == null)
-            {
-                context.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
-                return;
-            }
+        if (scheduler.queue.isEmpty()) {
+            context.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
+            return;
         }
-        scheduler.nextTrack();
-        context.reply(config.getEmojis().Success+"La canción actual se ha saltado!").queue();
+
+        scheduler.shuffle();
+        context.reply(config.getEmojis().Success + " Se ha aleatorizado la cola!").setEphemeral(false).queue();
     }
 
     @Override
     public String getName() {
-        return "skip";
+        return "shuffle";
     }
 
     @Override
     public String getDescription() {
-        return "Salta la canción actual";
+        return "Aleatoriza la orden de las canciones de la cola";
     }
 
     @Override
     public String getUsage() {
-        return "skip";
+        return "shuffle";
     }
 
     @Override

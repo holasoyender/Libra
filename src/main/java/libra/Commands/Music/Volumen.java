@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
 import libra.Utils.Command.Command;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -33,6 +35,31 @@ public class Volumen implements Command {
             context.reply(config.getEmojis().Error + " El volumen debe de ser un número entre 10 y 100!").setEphemeral(true).queue();
             return;
         }
+
+        Member Member = context.getMember();
+
+        if (Member == null || Member.getVoiceState() == null || context.getGuild().getSelfMember().getVoiceState() == null) {
+            context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+            return;
+        }
+
+        if (!Member.getVoiceState().inVoiceChannel()) {
+            context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+            return;
+        }
+
+        VoiceChannel VoiceChannel = Member.getVoiceState().getChannel();
+
+        if (context.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+            if (context.getGuild().getSelfMember().getVoiceState().getChannel() != VoiceChannel) {
+                context.reply(config.getEmojis().Error + " Debes de estar en el mismo canal de voz que yo!").setEphemeral(true).queue();
+                return;
+            }
+        } else {
+            context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+            return;
+        }
+
         context.reply(config.getEmojis().Success+ " El volumen de la canción ha cambiado de **"+player.getVolume()+"%** a **"+newVolume+"%**.").setEphemeral(true).queue();
 
         player.setVolume((int) newVolume);

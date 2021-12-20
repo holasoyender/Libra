@@ -3,9 +3,7 @@ package libra.Commands.Music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
-import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -14,15 +12,14 @@ import org.bson.Document;
 
 import static libra.Lavaplayer.Player.getMusicManager;
 
-public class Skip implements Command {
+public class Pause implements Command {
     @Override
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if (context.getGuild() == null) return;
 
-        Guild guild = context.getGuild();
+        net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
         GuildMusicManager mng = getMusicManager(guild);
         AudioPlayer player = mng.player;
-        TrackScheduler scheduler = mng.scheduler;
 
         Member Member = context.getMember();
 
@@ -48,30 +45,33 @@ public class Skip implements Command {
             return;
         }
 
-        if(scheduler.queue.isEmpty()) {
-            if (player.getPlayingTrack() == null)
-            {
-                context.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
-                return;
-            }
+        if (player.getPlayingTrack() == null)
+        {
+            context.reply(config.getEmojis().Error + " No hay ninguna canción sonando!").setEphemeral(true).queue();
+            return;
         }
-        scheduler.nextTrack();
-        context.reply(config.getEmojis().Success+"La canción actual se ha saltado!").queue();
+
+        player.setPaused(!player.isPaused());
+        if (player.isPaused())
+            context.reply(config.getEmojis().Success+"La canción actual se ha pausado!").queue();
+        else
+            context.reply(config.getEmojis().Success+"La canción actual se ha resumido!").queue();
+
     }
 
     @Override
     public String getName() {
-        return "skip";
+        return "pause";
     }
 
     @Override
     public String getDescription() {
-        return "Salta la canción actual";
+        return "Pausar la canción que está sonando";
     }
 
     @Override
     public String getUsage() {
-        return "skip";
+        return "pause";
     }
 
     @Override
