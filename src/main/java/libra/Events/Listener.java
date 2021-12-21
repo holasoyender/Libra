@@ -209,7 +209,6 @@ public class Listener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
-        if(event.getGuild() == null) return;
         String Id = event.getComponentId();
         String[] Args = Id.split(":");
 
@@ -252,6 +251,7 @@ public class Listener extends ListenerAdapter {
                     break;
 
                 case "infracciones":
+                    if(event.getGuild() == null) return;
 
                     String UserID = Args[2];
                     int Page = Integer.parseInt(Args[3]);
@@ -322,6 +322,7 @@ public class Listener extends ListenerAdapter {
                     break;
 
                 case "queue":
+                    if(event.getGuild() == null) return;
 
                     String Action2 = Args[3];
                     int Page2 = Integer.parseInt(Args[2]);
