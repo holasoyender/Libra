@@ -35,3 +35,7 @@ Después de esto se generará un archivo de configuración llamado `config.yml` 
  
  Estado: El estado que tendrá el bot  -  (Opcional, por defecto "el mundo")
  ```
+
+## Archivos nativos de audio adicionales
+
+Ver [este repositorio](https://github.com/holasoyender/lavaplayer-natives)
