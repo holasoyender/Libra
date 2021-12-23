@@ -2,10 +2,7 @@ package libra;
 
 import io.sentry.Sentry;
 import libra.Config.Config;
-import libra.Events.GuildLogs;
-import libra.Events.Interactions;
-import libra.Events.Internal;
-import libra.Events.Messages;
+import libra.Events.*;
 import libra.Lavaplayer.Player;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -42,7 +39,8 @@ public class Main {
                 new Internal(),
                 new GuildLogs(),
                 new Messages(),
-                new Interactions());
+                new Interactions(),
+                new Voice());
 
         builder.setMemberCachePolicy(MemberCachePolicy.VOICE.or(MemberCachePolicy.OWNER));
         builder.setChunkingFilter(ChunkingFilter.NONE);

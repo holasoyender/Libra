@@ -5,6 +5,7 @@ import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
 import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.Command;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.bson.Document;
@@ -21,7 +22,7 @@ public class Stop implements Command {
         AudioPlayer player = mng.player;
         TrackScheduler scheduler = mng.scheduler;
 
-        net.dv8tion.jda.api.entities.Member Member = context.getMember();
+        Member Member = context.getMember();
 
         if (Member == null || Member.getVoiceState() == null || context.getGuild().getSelfMember().getVoiceState() == null) {
             context.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
