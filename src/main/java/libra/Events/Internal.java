@@ -106,7 +106,7 @@ public class Internal extends ListenerAdapter {
     @Override
     public void onResumed(@NotNull ResumedEvent event) {
         WebhookEmbed Embed = new WebhookEmbedBuilder()
-                .setColor(0x596ED6)
+                .setColor(0x56F772)
                 .setAuthor(new WebhookEmbed.EmbedAuthor("Shard " + event.getJDA().getShardInfo().getShardId() + " resumida", event.getJDA().getSelfUser().getAvatarUrl(), null))
                 .build();
 
