@@ -42,6 +42,7 @@ public class Recordatorios {
                     Thread.sleep(30000);
                 } catch (InterruptedException ex) {
                     System.out.println("Error: " + ex.getMessage());
+                    Thread.currentThread().interrupt();
                 }
             }
         }).start();

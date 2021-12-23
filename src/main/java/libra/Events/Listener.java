@@ -149,6 +149,14 @@ public class Listener extends ListenerAdapter {
                 event.getJDA().shutdown();
                 System.exit(0);
             }
+            case "mem" -> {
+                Runtime rt = Runtime.getRuntime();
+                double freeMem = rt.freeMemory();
+                double totalMem = rt.totalMemory();
+                double usedMem = totalMem - freeMem;
+
+                event.getMessage().reply(String.format("```java\nMemoria usada: %s MB\nMemoria total: %s MB\nMemoria libre: %s MB\n\nProcesadores totales: %s Cores```", Math.floor(usedMem / 1000000), Math.floor(totalMem / 1000000), Math.floor(freeMem / 1000000),  Runtime.getRuntime().availableProcessors())).mentionRepliedUser(false).queue();
+            }
             default -> {
             }
         }
