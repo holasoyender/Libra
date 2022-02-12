@@ -74,7 +74,7 @@ public class Play implements Command {
             }
         }
         if(!isUrl(Search)){
-            Search = "ytsearch:" + Search;
+            Search = "spsearch:" + Search;
             isSearch = true;
         }
 

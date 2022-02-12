@@ -36,6 +36,9 @@ public class Config {
 
                 EmbedColor: "#5b6cec"    # El color de los embeds enviados por el bot (Opcional)
                 LogWebhookURL: ""    # La URL del Webhook de logs internos del bot (Opcional)
+                
+                SpotifyClientID: ""    # El ID de cliente de Spotify (Obligatorio)
+                SpotifyClientSecret: ""    # El secreto de cliente de Spotify (Obligatorio)
                 """;
 
         if (!(file.exists())) {
@@ -68,6 +71,14 @@ public class Config {
 
     public String getOwnerID() {
         return config.get("OwnerID").toString();
+    }
+
+    public String getSpotifyClientID() {
+        return config.get("SpotifyClientID").toString();
+    }
+
+    public String getSpotifyClientSecret() {
+        return config.get("SpotifyClientSecret").toString();
     }
 
     public String getDefaultPrefix() {

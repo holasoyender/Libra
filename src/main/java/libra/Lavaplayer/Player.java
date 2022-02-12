@@ -1,5 +1,7 @@
 package libra.Lavaplayer;
 
+import com.github.topislavalinkplugins.topissourcemanagers.spotify.SpotifyConfig;
+import com.github.topislavalinkplugins.topissourcemanagers.spotify.SpotifySourceManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -32,6 +34,13 @@ public class Player {
     public Player() {
 
         playerManager = new DefaultAudioPlayerManager();
+
+        SpotifyConfig spotifyConfig = new SpotifyConfig();
+        spotifyConfig.setClientId(config.getSpotifyClientID());
+        spotifyConfig.setClientSecret(config.getSpotifyClientSecret());
+        spotifyConfig.setCountryCode("ES");
+
+        playerManager.registerSourceManager(new SpotifySourceManager(null, spotifyConfig, playerManager));
         playerManager.registerSourceManager(new YoutubeAudioSourceManager());
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
