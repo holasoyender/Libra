@@ -198,7 +198,7 @@ public class Interactions extends ListenerAdapter {
                     }
 
                     net.dv8tion.jda.api.entities.Guild guild = event.getGuild();
-                    GuildMusicManager mng = getMusicManager(guild);
+                    GuildMusicManager mng = getMusicManager(guild, null);
                     TrackScheduler scheduler = mng.scheduler;
 
                     if(scheduler.queue.isEmpty()) {

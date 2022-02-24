@@ -4,11 +4,18 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import libra.Main;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import static libra.Lavaplayer.Player.getMusicManager;
 
 public class TrackScheduler extends AudioEventAdapter {
     private boolean repeating = false;
@@ -29,7 +36,13 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void nextTrack() {
-        player.startTrack(queue.poll(), false);
+        AudioTrack track = queue.poll();
+        player.startTrack(track, false);
+        if (track != null) {
+            Member member = (Member) track.getUserData();
+            GuildMusicManager mng = getMusicManager(member.getGuild(), null);
+            mng.channel.sendMessageEmbeds(Embeds.getTrackEmbed(track, Main.getJDA()).build()).queue();
+        }
     }
 
     @Override
@@ -38,10 +51,12 @@ public class TrackScheduler extends AudioEventAdapter {
 
         if (endReason.mayStartNext)
         {
-            if (repeating)
+            if (repeating) {
                 player.startTrack(lastTrack.makeClone(), false);
-            else
+            }
+            else {
                 nextTrack();
+            }
         }
     }
     public boolean isRepeating()

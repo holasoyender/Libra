@@ -21,7 +21,7 @@ public class Loop implements Command {
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if (context.getGuild() == null) return;
 
-        GuildMusicManager mng = getMusicManager(context.getGuild());
+        GuildMusicManager mng = getMusicManager(context.getGuild(), null);
         OptionMapping raw = context.getOption("activado");
         AudioPlayer player = mng.player;
         TrackScheduler scheduler = mng.scheduler;

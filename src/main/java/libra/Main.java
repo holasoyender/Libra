@@ -4,9 +4,11 @@ import io.sentry.Sentry;
 import libra.Config.Config;
 import libra.Events.*;
 import libra.Lavaplayer.Player;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -15,6 +17,8 @@ import javax.security.auth.login.LoginException;
 
 @SuppressWarnings("InstantiationOfUtilityClass")
 public class Main {
+
+    public static JDA jda;
 
     public static void main(String[] args) {
 
@@ -62,7 +66,8 @@ public class Main {
         builder.setShardsTotal(-1);
 
         try {
-            builder.build();
+            ShardManager shards = builder.build();
+            jda = shards.getShardById(0);
             new Player();
             if(Config.getSentry() != null) {
                 Sentry.init(options -> {
@@ -74,5 +79,9 @@ public class Main {
         } catch (LoginException e) {
             e.printStackTrace();
         }
+    }
+
+    public static JDA getJDA() {
+        return jda;
     }
 }

@@ -17,7 +17,7 @@ public class Sonando implements Command {
         if(context.getGuild() == null) return;
 
         net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
-        GuildMusicManager mng = getMusicManager(guild);
+        GuildMusicManager mng = getMusicManager(guild, null);
         AudioPlayer player = mng.player;
 
         if (player.getPlayingTrack() == null)

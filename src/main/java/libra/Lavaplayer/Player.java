@@ -18,7 +18,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import libra.Config.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,23 +64,17 @@ public class Player {
             @Override
             public void trackLoaded(AudioTrack track)
             {
-                EmbedBuilder Embed = new EmbedBuilder()
-                        .setColor(config.getEmbedColor())
-                        .setAuthor("Canción añadida la cola ", null, event.getJDA().getSelfUser().getAvatarUrl())
-                        .setDescription("**[" + formatTitle(track.getInfo().title) + "](https://www.youtube.com/watch?v=" + track.getInfo().identifier+")**");
+                EmbedBuilder Embed = Embeds.getAddEmbed(track);
+                boolean ephemeral = true;
 
                 if (mng.player.getPlayingTrack() == null) {
-                    Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl())
-                            .setThumbnail("https://i.ytimg.com/vi/" + track.getInfo().identifier + "/mqdefault.jpg")
-                            .setDescription(null)
-                            .setTitle(formatTitle(track.getInfo().title), "https://www.youtube.com/watch?v=" + track.getInfo().identifier)
-                            .addField("Autor", track.getInfo().author, true)
-                            .addField("Duración", getTimestamp(track.getDuration()), true);
+                    ephemeral = false;
+                    Embed = Embeds.getTrackEmbed(track, event.getJDA());
                 }
 
-
                 mng.scheduler.queue(track);
-                event.replyEmbeds(Embed.build()).queue();
+                track.setUserData(event.getMember());
+                event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
             }
 
             @Override
@@ -92,22 +90,17 @@ public class Player {
 
                 if (isSearch)
                 {
-                    EmbedBuilder Embed = new EmbedBuilder()
-                            .setColor(config.getEmbedColor())
-                            .setAuthor("Canción añadida la cola ", null, event.getJDA().getSelfUser().getAvatarUrl())
-                            .setDescription("**[" + formatTitle(firstTrack.getInfo().title) + "](https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier+")**");
+                    EmbedBuilder Embed = Embeds.getAddEmbed(firstTrack);
+                    boolean ephemeral = true;
 
                     if (mng.player.getPlayingTrack() == null) {
-                        Embed.setAuthor("Reproduciendo ahora", null, event.getJDA().getSelfUser().getAvatarUrl())
-                                .setThumbnail("https://i.ytimg.com/vi/" + firstTrack.getInfo().identifier + "/mqdefault.jpg")
-                                .setDescription(null)
-                                .setTitle(formatTitle(firstTrack.getInfo().title), "https://www.youtube.com/watch?v=" + firstTrack.getInfo().identifier)
-                                .addField("Autor", firstTrack.getInfo().author, true)
-                                .addField("Duración", getTimestamp(firstTrack.getDuration()), true);
+                        ephemeral = false;
+                        Embed = Embeds.getTrackEmbed(firstTrack, event.getJDA());
                     }
 
+                    firstTrack.setUserData(event.getMember());
 
-                    event.replyEmbeds(Embed.build()).queue();
+                    event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
                     mng.scheduler.queue(firstTrack);
                 }
                 else
@@ -115,7 +108,7 @@ public class Player {
                     EmbedBuilder Embed = new EmbedBuilder()
                             .setColor(config.getEmbedColor())
                             .setDescription("Se han añadido **" + playlist.getTracks().size() + "** canciones a la cola");
-                    event.replyEmbeds(Embed.build()).queue();
+                    event.replyEmbeds(Embed.build()).setEphemeral(true).queue();
                     tracks.forEach(mng.scheduler::queue);
                 }
             }
@@ -123,25 +116,25 @@ public class Player {
             @Override
             public void noMatches()
             {
-                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").queue();
+                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").setEphemeral(true).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception)
             {
-                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").queue();
+                event.reply(config.getEmojis().Error+"No he podido encontrar ninguna canción con ese nombre.").setEphemeral(true).queue();
                 exception.printStackTrace();
             }
         });
     }
 
-    public static GuildMusicManager getMusicManager(Guild guild)
+    public static @NotNull GuildMusicManager getMusicManager(Guild guild, MessageChannel channel)
     {
         String guildId = guild.getId();
         GuildMusicManager mng = musicManagers.get(guildId);
         if (mng == null) {
 
-            mng = new GuildMusicManager(playerManager);
+            mng = new GuildMusicManager(playerManager, channel);
             mng.player.setVolume(DEFAULT_VOLUME);
             musicManagers.put(guildId, mng);
         }

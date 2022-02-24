@@ -1,19 +1,15 @@
 package libra.Events;
 
-import libra.Config.Config;
 import libra.Database.Database;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
 public class GuildLogs extends ListenerAdapter {
-
-    Config config = new Config();
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {

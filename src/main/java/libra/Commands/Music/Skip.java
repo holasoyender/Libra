@@ -20,7 +20,7 @@ public class Skip implements Command {
         if (context.getGuild() == null) return;
 
         Guild guild = context.getGuild();
-        GuildMusicManager mng = getMusicManager(guild);
+        GuildMusicManager mng = getMusicManager(guild, null);
         AudioPlayer player = mng.player;
         TrackScheduler scheduler = mng.scheduler;
 
@@ -56,7 +56,7 @@ public class Skip implements Command {
             }
         }
         scheduler.nextTrack();
-        context.reply(config.getEmojis().Success+"La canción actual se ha saltado!").queue();
+        context.reply(config.getEmojis().Success+"La canción actual se ha saltado!").setEphemeral(true).queue();
     }
 
     @Override

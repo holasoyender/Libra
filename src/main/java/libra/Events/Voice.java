@@ -20,14 +20,14 @@ public class Voice extends ListenerAdapter {
         if (event.getMember().getVoiceState() == null) return;
         if (event.getMember().getVoiceState().isGuildMuted() || event.getMember().getVoiceState().isMuted()) {
 
-            GuildMusicManager mng = getMusicManager(event.getGuild());
+            GuildMusicManager mng = getMusicManager(event.getGuild(), null);
             AudioPlayer player = mng.player;
 
             player.setPaused(true);
         }
         if (!event.getMember().getVoiceState().isGuildMuted() || !event.getMember().getVoiceState().isMuted()) {
 
-            GuildMusicManager mng = getMusicManager(event.getGuild());
+            GuildMusicManager mng = getMusicManager(event.getGuild(), null);
             AudioPlayer player = mng.player;
 
             player.setPaused(false);
@@ -38,7 +38,7 @@ public class Voice extends ListenerAdapter {
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
 
-        GuildMusicManager mng = getMusicManager(event.getGuild());
+        GuildMusicManager mng = getMusicManager(event.getGuild(), null);
         AudioPlayer player = mng.player;
         TrackScheduler scheduler = mng.scheduler;
 

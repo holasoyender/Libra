@@ -23,7 +23,7 @@ public class Lista implements Command {
         if(context.getGuild() == null) return;
 
         net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
-        GuildMusicManager mng = getMusicManager(guild);
+        GuildMusicManager mng = getMusicManager(guild, null);
         TrackScheduler scheduler = mng.scheduler;
 
         if(scheduler.queue.isEmpty()) {
