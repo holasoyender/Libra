@@ -285,6 +285,14 @@ public class Interactions extends ListenerAdapter {
                             return;
                         }
                     }
+
+                    String trackID = Args[2];
+
+                    if(!trackID.equals(mng.player.getPlayingTrack().getInfo().identifier)){
+                        event.reply(config.getEmojis().Error + " Esa canción ya ha acabado!").setEphemeral(true).queue();
+                        return;
+                    }
+
                     scheduler.nextTrack();
                     event.reply(config.getEmojis().Success + "La canción actual se ha saltado!").setEphemeral(true).queue();
 
@@ -316,6 +324,13 @@ public class Interactions extends ListenerAdapter {
 
                     if (player.getPlayingTrack() == null) {
                         event.reply(config.getEmojis().Error + " No hay ninguna canción sonando!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    String pauseTrackID = Args[2];
+
+                    if(!pauseTrackID.equals(mng.player.getPlayingTrack().getInfo().identifier)){
+                        event.reply(config.getEmojis().Error + " Esa canción ya ha acabado!").setEphemeral(true).queue();
                         return;
                     }
 
@@ -353,6 +368,13 @@ public class Interactions extends ListenerAdapter {
 
                     if (player.getPlayingTrack() == null) {
                         event.reply(config.getEmojis().Error + " No hay ninguna canción sonando!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    String stopTrackID = Args[2];
+
+                    if(!stopTrackID.equals(mng.player.getPlayingTrack().getInfo().identifier)){
+                        event.reply(config.getEmojis().Error + " Esa canción ya ha acabado!").setEphemeral(true).queue();
                         return;
                     }
 

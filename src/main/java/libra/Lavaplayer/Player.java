@@ -76,9 +76,9 @@ public class Player {
                     EmbedBuilder newEmbed = Embeds.getTrackEmbed(track, event.getJDA());
 
                     event.getChannel().sendMessageEmbeds(newEmbed.build()).setActionRow(
-                            Button.success("cmd:pause:" + Objects.requireNonNull(event.getGuild()).getId(), "Pausar / Continuar"),
-                            Button.primary("cmd:skip:" + event.getGuild().getId(), "Saltar"),
-                            Button.danger("cmd:stop:" + event.getGuild().getId(), "Parar")
+                            Button.success("cmd:pause:" + track.getIdentifier(), "Pausar / Continuar"),
+                            Button.primary("cmd:skip:" + track.getIdentifier(), "Saltar"),
+                            Button.danger("cmd:stop:" + track.getIdentifier(), "Parar")
                     ).queue();
                 }
             }
@@ -110,9 +110,9 @@ public class Player {
                         event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
                     else
                         event.replyEmbeds(Embed.build()).addActionRow(
-                                Button.success("cmd:pause:"+ Objects.requireNonNull(event.getGuild()).getId(), "Pausar / Continuar") ,
-                                Button.primary("cmd:skip:"+event.getGuild().getId(), "Saltar"),
-                                Button.danger("cmd:stop:"+event.getGuild().getId(), "Parar")
+                                Button.success("cmd:pause:"+ firstTrack.getIdentifier(), "Pausar / Continuar") ,
+                                Button.primary("cmd:skip:"+firstTrack.getIdentifier(), "Saltar"),
+                                Button.danger("cmd:stop:"+firstTrack.getIdentifier(), "Parar")
                         ).queue();
                     mng.scheduler.queue(firstTrack);
                 }

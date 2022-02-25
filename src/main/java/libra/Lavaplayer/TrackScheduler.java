@@ -39,11 +39,10 @@ public class TrackScheduler extends AudioEventAdapter {
             Member member = (Member) track.getUserData();
             GuildMusicManager mng = getMusicManager(member.getGuild(), null);
 
-
             MessageAction msg = mng.channel.sendMessageEmbeds(Embeds.getTrackEmbed(track, Main.getJDA()).build()).setActionRow(
-                    Button.success("cmd:pause:" + member.getGuild().getId(), "Pausar / Continuar"),
-                    Button.primary("cmd:skip:" + member.getGuild().getId(), "Saltar"),
-                    Button.danger("cmd:stop:" + member.getGuild().getId(), "Parar")
+                    Button.success("cmd:pause:" +track.getIdentifier(), "Pausar / Continuar"),
+                    Button.primary("cmd:skip:" + track.getIdentifier(), "Saltar"),
+                    Button.danger("cmd:stop:" + track.getIdentifier(), "Parar")
             );
             msg.queue(message -> track.setUserData(member));
         }
@@ -57,6 +56,15 @@ public class TrackScheduler extends AudioEventAdapter {
         {
             if (repeating) {
                 player.startTrack(lastTrack.makeClone(), false);
+                Member member = (Member) lastTrack.getUserData();
+                GuildMusicManager mng = getMusicManager(member.getGuild(), null);
+
+                MessageAction msg = mng.channel.sendMessageEmbeds(Embeds.getTrackEmbed(lastTrack, Main.getJDA()).build()).setActionRow(
+                        Button.success("cmd:pause:" +lastTrack.getIdentifier(), "Pausar / Continuar"),
+                        Button.primary("cmd:skip:" + lastTrack.getIdentifier(), "Saltar"),
+                        Button.danger("cmd:stop:" + lastTrack.getIdentifier(), "Parar")
+                );
+                msg.queue(message -> lastTrack.setUserData(member));
             }
             else {
                 nextTrack();
