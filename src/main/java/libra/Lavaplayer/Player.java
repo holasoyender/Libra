@@ -19,14 +19,14 @@ import libra.Config.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Player {
 
@@ -62,19 +62,25 @@ public class Player {
         playerManager.loadItemOrdered(mng, url, new AudioLoadResultHandler()
         {
             @Override
-            public void trackLoaded(AudioTrack track)
-            {
+            public void trackLoaded(AudioTrack track) {
                 EmbedBuilder Embed = Embeds.getAddEmbed(track);
-                boolean ephemeral = true;
-
-                if (mng.player.getPlayingTrack() == null) {
-                    ephemeral = false;
-                    Embed = Embeds.getTrackEmbed(track, event.getJDA());
-                }
 
                 mng.scheduler.queue(track);
                 track.setUserData(event.getMember());
-                event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
+
+                if (mng.player.getPlayingTrack() != null && mng.player.getPlayingTrack() != track) {
+                    event.replyEmbeds(Embed.build()).setEphemeral(true).queue();
+                }
+                else {
+                    event.replyEmbeds(Embed.build()).setEphemeral(true).queue();
+                    EmbedBuilder newEmbed = Embeds.getTrackEmbed(track, event.getJDA());
+
+                    event.getChannel().sendMessageEmbeds(newEmbed.build()).setActionRow(
+                            Button.success("cmd:pause:" + Objects.requireNonNull(event.getGuild()).getId(), "Pausar / Continuar"),
+                            Button.primary("cmd:skip:" + event.getGuild().getId(), "Saltar"),
+                            Button.danger("cmd:stop:" + event.getGuild().getId(), "Parar")
+                    ).queue();
+                }
             }
 
             @Override
@@ -100,7 +106,14 @@ public class Player {
 
                     firstTrack.setUserData(event.getMember());
 
-                    event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
+                    if(ephemeral)
+                        event.replyEmbeds(Embed.build()).setEphemeral(ephemeral).queue();
+                    else
+                        event.replyEmbeds(Embed.build()).addActionRow(
+                                Button.success("cmd:pause:"+ Objects.requireNonNull(event.getGuild()).getId(), "Pausar / Continuar") ,
+                                Button.primary("cmd:skip:"+event.getGuild().getId(), "Saltar"),
+                                Button.danger("cmd:stop:"+event.getGuild().getId(), "Parar")
+                        ).queue();
                     mng.scheduler.queue(firstTrack);
                 }
                 else
@@ -109,6 +122,11 @@ public class Player {
                             .setColor(config.getEmbedColor())
                             .setDescription("Se han añadido **" + playlist.getTracks().size() + "** canciones a la cola");
                     event.replyEmbeds(Embed.build()).setEphemeral(true).queue();
+
+                    for (AudioTrack track : tracks) {
+                        track.setUserData(event.getMember());
+                    }
+
                     tracks.forEach(mng.scheduler::queue);
                 }
             }

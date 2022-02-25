@@ -1,5 +1,6 @@
 package libra.Events;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import libra.Database.Database;
 import libra.Functions.DiscordTogether;
@@ -7,9 +8,7 @@ import libra.Lavaplayer.GuildMusicManager;
 import libra.Lavaplayer.TrackScheduler;
 import libra.Utils.Command.CommandManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -77,6 +76,14 @@ public class Interactions extends ListenerAdapter {
         String Id = event.getComponentId();
         String[] Args = Id.split(":");
 
+        Guild guild = event.getGuild();
+        assert guild != null;
+        GuildMusicManager mng = getMusicManager(guild, null);
+        TrackScheduler scheduler = mng.scheduler;
+        AudioPlayer player = mng.player;
+
+        Member Member = event.getMember();
+
         if (Args[0].equals("cmd")) {
 
             switch (Args[1]) {
@@ -104,10 +111,10 @@ public class Interactions extends ListenerAdapter {
                                         .setPlaceholder("Elija la categoría")
                                         .addOption("Información", "cmd:help:Información:" + event.getUser().getId(), "Lista de comandos de la sección de información", Emoji.fromUnicode("\uD83D\uDCA1"))
                                         .addOption("Bot", "cmd:help:Bot:" + event.getUser().getId(), "Lista de comandos de la sección de Bot", Emoji.fromUnicode("\uD83E\uDD16"))
-                                        .addOption("Moderación", "cmd:help:Moderación:"+event.getUser().getId(), "Lista de comandos de la sección de Moderación", Emoji.fromUnicode("\uD83D\uDDE1️"))
+                                        .addOption("Moderación", "cmd:help:Moderación:" + event.getUser().getId(), "Lista de comandos de la sección de Moderación", Emoji.fromUnicode("\uD83D\uDDE1️"))
                                         .addOption("Música", "cmd:help:Música:" + event.getUser().getId(), "Lista de comandos de la sección de Música", Emoji.fromUnicode("\uD83C\uDFB5"))
                                         .addOption("Ocio", "cmd:help:Ocio:" + event.getUser().getId(), "Lista de comandos de la sección de Ocio", Emoji.fromUnicode("\uD83D\uDEF9"))
-                                        .addOption("Configuración", "cmd:help:Configuración:"+event.getUser().getId(), "Lista de comandos de la sección de Configuración", Emoji.fromUnicode("⚙️"))
+                                        .addOption("Configuración", "cmd:help:Configuración:" + event.getUser().getId(), "Lista de comandos de la sección de Configuración", Emoji.fromUnicode("⚙️"))
                                         .build()
                         ).queue();
 
@@ -116,7 +123,7 @@ public class Interactions extends ListenerAdapter {
                     break;
 
                 case "infracciones":
-                    if(event.getGuild() == null) return;
+                    if (event.getGuild() == null) return;
 
                     String UserID = Args[2];
                     int Page = Integer.parseInt(Args[3]);
@@ -145,15 +152,15 @@ public class Interactions extends ListenerAdapter {
 
                     if (Action.equals("back")) {
                         Page -= 1;
-                        if(Page < 0) {
+                        if (Page < 0) {
                             event.reply(config.getEmojis().Error + "No puedes retroceder más!").setEphemeral(true).queue();
                             return;
                         }
                     }
 
-                    if(Action.equals("next")) {
+                    if (Action.equals("next")) {
                         Page += 1;
-                        if(Page > allInfractionsSplit.size() - 1) {
+                        if (Page > allInfractionsSplit.size() - 1) {
                             event.reply(config.getEmojis().Error + "No puedes avanzar más!").setEphemeral(true).queue();
                             return;
                         }
@@ -161,33 +168,33 @@ public class Interactions extends ListenerAdapter {
                     MessageEmbed oldEmbed = event.getMessage().getEmbeds().get(0);
 
                     String Author = "el usuario";
-                    if(oldEmbed.getAuthor() != null) Author = oldEmbed.getAuthor().getName();
+                    if (oldEmbed.getAuthor() != null) Author = oldEmbed.getAuthor().getName();
                     String Thumbnail = event.getJDA().getSelfUser().getAvatarUrl();
-                    if(oldEmbed.getThumbnail() != null) Thumbnail = oldEmbed.getThumbnail().getUrl();
+                    if (oldEmbed.getThumbnail() != null) Thumbnail = oldEmbed.getThumbnail().getUrl();
 
-                    int finalPage = Page+1;
+                    int finalPage = Page + 1;
 
                     EmbedBuilder Embed = new EmbedBuilder()
                             .setColor(config.getEmbedColor())
                             .setAuthor(Author, null, event.getJDA().getSelfUser().getAvatarUrl())
                             .setThumbnail(Thumbnail)
-                            .setDescription("Para borrar una infracción, usa el comando `/delinfracción <Usuario> <ID>`\n**"+allInfractions.size()+"** infracciones totales")
-                            .setFooter("Página "+finalPage+" de " + allInfractionsSplit.size(), null);
+                            .setDescription("Para borrar una infracción, usa el comando `/delinfracción <Usuario> <ID>`\n**" + allInfractions.size() + "** infracciones totales")
+                            .setFooter("Página " + finalPage + " de " + allInfractionsSplit.size(), null);
 
                     for (Document infraction : allInfractionsSplit.get(Page)) {
-                        Embed.addField(" - "+infraction.get("Type")+" #"+infraction.get("ID"), "```"+infraction.get("Reason")+"```\n**Fecha**: "+ TimeFormat.DEFAULT.format(infraction.getLong("Date"))+"\n**Duración**: "+infraction.get("Duration")+"\n**Moderador**: `"+infraction.get("Moderator")+"`", true);
+                        Embed.addField(" - " + infraction.get("Type") + " #" + infraction.get("ID"), "```" + infraction.get("Reason") + "```\n**Fecha**: " + TimeFormat.DEFAULT.format(infraction.getLong("Date")) + "\n**Duración**: " + infraction.get("Duration") + "\n**Moderador**: `" + infraction.get("Moderator") + "`", true);
                     }
 
                     event.editMessageEmbeds(Embed.build()).setActionRow(
-                            Button.primary("cmd:infracciones:" + UserID + ":"+Page+":back:"+event.getUser().getId(), "◀"),
-                            Button.primary("cmd:infracciones:" + UserID + ":"+Page+":next:"+event.getUser().getId(), "▶")
+                            Button.primary("cmd:infracciones:" + UserID + ":" + Page + ":back:" + event.getUser().getId(), "◀"),
+                            Button.primary("cmd:infracciones:" + UserID + ":" + Page + ":next:" + event.getUser().getId(), "▶")
                     ).queue();
 
 
                     break;
 
                 case "queue":
-                    if(event.getGuild() == null) return;
+                    if (event.getGuild() == null) return;
 
                     String Action2 = Args[3];
                     int Page2 = Integer.parseInt(Args[2]);
@@ -197,11 +204,7 @@ public class Interactions extends ListenerAdapter {
                         return;
                     }
 
-                    net.dv8tion.jda.api.entities.Guild guild = event.getGuild();
-                    GuildMusicManager mng = getMusicManager(guild, null);
-                    TrackScheduler scheduler = mng.scheduler;
-
-                    if(scheduler.queue.isEmpty()) {
+                    if (scheduler.queue.isEmpty()) {
                         event.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
                         return;
                     }
@@ -219,45 +222,151 @@ public class Interactions extends ListenerAdapter {
 
                     if (Action2.equals("back")) {
                         Page2 -= 1;
-                        if(Page2 < 0) {
+                        if (Page2 < 0) {
                             event.reply(config.getEmojis().Error + "No puedes retroceder más!").setEphemeral(true).queue();
                             return;
                         }
                     }
 
-                    if(Action2.equals("next")) {
+                    if (Action2.equals("next")) {
                         Page2 += 1;
-                        if(Page2 > queueSplit.size() - 1) {
+                        if (Page2 > queueSplit.size() - 1) {
                             event.reply(config.getEmojis().Error + "No puedes avanzar más!").setEphemeral(true).queue();
                             return;
                         }
                     }
 
-                    int _finalPage = Page2+1;
+                    int _finalPage = Page2 + 1;
 
                     EmbedBuilder Embed2 = new EmbedBuilder()
                             .setColor(config.getEmbedColor())
                             .setAuthor("Lista de reproducción", null, event.getJDA().getSelfUser().getAvatarUrl())
-                            .setFooter("Página "+_finalPage+" de " + queueSplit.size() +" ("+queue.size()+" canciónes totales)", null);
+                            .setFooter("Página " + _finalPage + " de " + queueSplit.size() + " (" + queue.size() + " canciónes totales)", null);
 
 
-                    for(AudioTrack track : queueSplit.get(Page2)) {
-                        Embed2.addField(formatTitle(track.getInfo().title), "**Por**: "+track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
+                    for (AudioTrack track : queueSplit.get(Page2)) {
+                        Embed2.addField(formatTitle(track.getInfo().title), "**Por**: " + track.getInfo().author + "\n**Duración**: " + getTimestamp(track.getInfo().length), false);
                     }
 
                     event.editMessageEmbeds(Embed2.build()).setActionRow(
-                            Button.primary("cmd:queue:"+Page2+":back:"+event.getUser().getId(), "◀"),
-                            Button.primary("cmd:queue:"+Page2+":next:"+event.getUser().getId(), "▶")
+                            Button.primary("cmd:queue:" + Page2 + ":back:" + event.getUser().getId(), "◀"),
+                            Button.primary("cmd:queue:" + Page2 + ":next:" + event.getUser().getId(), "▶")
                     ).queue();
 
                     break;
 
-                default: event.reply(config.getEmojis().Error + "Interacción desconocida!").setEphemeral(true).queue();
+                case "skip":
 
+                    if (Member == null || Member.getVoiceState() == null || event.getGuild().getSelfMember().getVoiceState() == null) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (!Member.getVoiceState().inVoiceChannel()) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    VoiceChannel VoiceChannel = Member.getVoiceState().getChannel();
+
+                    if (event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+                        if (event.getGuild().getSelfMember().getVoiceState().getChannel() != VoiceChannel) {
+                            event.reply(config.getEmojis().Error + " Debes de estar en el mismo canal de voz que yo!").setEphemeral(true).queue();
+                            return;
+                        }
+                    } else {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (scheduler.queue.isEmpty()) {
+                        if (player.getPlayingTrack() == null) {
+                            event.reply(config.getEmojis().Error + " No hay canciones en la cola!").setEphemeral(true).queue();
+                            return;
+                        }
+                    }
+                    scheduler.nextTrack();
+                    event.reply(config.getEmojis().Success + "La canción actual se ha saltado!").setEphemeral(true).queue();
+
+                    break;
+
+                case "pause":
+
+                    if (Member == null || Member.getVoiceState() == null || event.getGuild().getSelfMember().getVoiceState() == null) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (!Member.getVoiceState().inVoiceChannel()) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    VoiceChannel pauseVoiceChannel = Member.getVoiceState().getChannel();
+
+                    if (event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+                        if (event.getGuild().getSelfMember().getVoiceState().getChannel() != pauseVoiceChannel) {
+                            event.reply(config.getEmojis().Error + " Debes de estar en el mismo canal de voz que yo!").setEphemeral(true).queue();
+                            return;
+                        }
+                    } else {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (player.getPlayingTrack() == null) {
+                        event.reply(config.getEmojis().Error + " No hay ninguna canción sonando!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    player.setPaused(!player.isPaused());
+                    if (player.isPaused())
+                        event.reply(config.getEmojis().Success + "La canción actual se ha pausado!").setEphemeral(true).queue();
+                    else
+                        event.reply(config.getEmojis().Success + "La canción actual se ha resumido!").setEphemeral(true).queue();
+
+                    break;
+
+                case "stop":
+
+                    if (Member == null || Member.getVoiceState() == null || event.getGuild().getSelfMember().getVoiceState() == null) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (!Member.getVoiceState().inVoiceChannel()) {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    net.dv8tion.jda.api.entities.VoiceChannel stopVoiceChannel = Member.getVoiceState().getChannel();
+
+                    if (event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+                        if (event.getGuild().getSelfMember().getVoiceState().getChannel() != stopVoiceChannel) {
+                            event.reply(config.getEmojis().Error + " Debes de estar en el mismo canal de voz que yo!").setEphemeral(true).queue();
+                            return;
+                        }
+                    } else {
+                        event.reply(config.getEmojis().Error + " Debes de estar en un canal de voz!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    if (player.getPlayingTrack() == null) {
+                        event.reply(config.getEmojis().Error + " No hay ninguna canción sonando!").setEphemeral(true).queue();
+                        return;
+                    }
+
+                    scheduler.queue.clear();
+                    player.stopTrack();
+                    player.setPaused(false);
+
+                    event.reply(config.getEmojis().Success + "La música se ha parado y la lista se ha vaciado!").setEphemeral(true).queue();
+                    break;
+
+                default:
+                    event.reply(config.getEmojis().Error + "Interacción desconocida!").setEphemeral(true).queue();
 
             }
         }
-
     }
-
 }

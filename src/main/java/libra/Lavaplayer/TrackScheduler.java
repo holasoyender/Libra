@@ -5,15 +5,11 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import libra.Main;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import static libra.Lavaplayer.Player.getMusicManager;
 
@@ -38,10 +34,18 @@ public class TrackScheduler extends AudioEventAdapter {
     public void nextTrack() {
         AudioTrack track = queue.poll();
         player.startTrack(track, false);
+
         if (track != null) {
             Member member = (Member) track.getUserData();
             GuildMusicManager mng = getMusicManager(member.getGuild(), null);
-            mng.channel.sendMessageEmbeds(Embeds.getTrackEmbed(track, Main.getJDA()).build()).queue();
+
+
+            MessageAction msg = mng.channel.sendMessageEmbeds(Embeds.getTrackEmbed(track, Main.getJDA()).build()).setActionRow(
+                    Button.success("cmd:pause:" + member.getGuild().getId(), "Pausar / Continuar"),
+                    Button.primary("cmd:skip:" + member.getGuild().getId(), "Saltar"),
+                    Button.danger("cmd:stop:" + member.getGuild().getId(), "Parar")
+            );
+            msg.queue(message -> track.setUserData(member));
         }
     }
 

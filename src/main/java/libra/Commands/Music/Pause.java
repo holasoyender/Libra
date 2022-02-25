@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import libra.Config.Config;
 import libra.Lavaplayer.GuildMusicManager;
 import libra.Utils.Command.Command;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -17,7 +18,7 @@ public class Pause implements Command {
     public void run(SlashCommandEvent context, Document Guild, Config config) {
         if (context.getGuild() == null) return;
 
-        net.dv8tion.jda.api.entities.Guild guild = context.getGuild();
+        Guild guild = context.getGuild();
         GuildMusicManager mng = getMusicManager(guild, null);
         AudioPlayer player = mng.player;
 

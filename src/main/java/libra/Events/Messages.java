@@ -50,7 +50,8 @@ public class Messages extends ListenerAdapter {
                 Script.put("channel", event.getChannel());
                 Script.put("msg", event.getMessage());
                 try {
-                    String result = Script.eval(toEval).toString();
+                    Object res = Script.eval(toEval);
+                    String result = res == null ? "void" : res.toString();
                     event.getMessage().reply(String.format("```java\n%s```", result.replaceAll(event.getJDA().getToken(), "T0K3N"))).mentionRepliedUser(false).queue();
                 } catch (ScriptException ex) {
 
