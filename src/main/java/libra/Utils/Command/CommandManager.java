@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public CommandManager() {
+        addCommand(new Seek());
         addCommand(new Lista());
         addCommand(new Sonando());
         addCommand(new Salir());
