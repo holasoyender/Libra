@@ -23,7 +23,7 @@ version '1.0'
 mainClassName = "libra.Main"
 
 dependencies {
-    implementation 'net.dv8tion:JDA:4.3.0_346'
+    implementation 'net.dv8tion:JDA:4.4.0_352'
     implementation 'me.duncte123:botCommons:2.3.10'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha14'
     implementation 'io.sentry:sentry:5.6.3'
