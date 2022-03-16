@@ -33,6 +33,9 @@ Después de esto se generará un archivo de configuración llamado `config.yml` 
  EmbedColor: El color que tendrán los embeds del bot  -  (Opcional, por defecto: #5b6cec)
  LogWebhookURL: La URL del Webhook donde se enviarán los logs de Libra  -  (Opcional)
  
+ SpotifyClientID: El ID de cliente de Spotify (Obligatorio)
+ SpotifyClientSecret: El secreto de cliente de Spotify (Obligatorio)
+ 
  Estado: El estado que tendrá el bot  -  (Opcional, por defecto "el mundo")
  ```
 
